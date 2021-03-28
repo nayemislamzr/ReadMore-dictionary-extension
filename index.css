@@ -252,6 +252,7 @@ input:checked+.slider:before {
 
 #volume,
 #translator {
+    display: inline-block;
     height: 20px;
     width: 20px;
     padding: 5px;
@@ -382,11 +383,11 @@ input:checked+.slider:before {
     content: "More";
     /* background-image: url(); */
     color: black;
-    background-repeat: no-repeat;
+    text-align: center;
     justify-self: center;
     align-self: center;
-    width: 30px;
-    height: 20px;
+    width: 25px;
+    height: 15px;
     border-radius: 10px;
     display: flex;
     position: absolute;

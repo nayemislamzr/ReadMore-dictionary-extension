@@ -16,6 +16,7 @@
         "scripts": ["background.js"]
     },
     "web_accessible_resources": ["index.html",
+        "index.css",
         "icons/black/next.svg",
         "icons/black/right.svg",
         "icons/black/404-error.svg",

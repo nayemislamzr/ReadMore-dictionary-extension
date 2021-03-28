@@ -38,7 +38,7 @@ function excecute(click) {
                 flex-direction: row;
                 grid-template-columns: minmax(300px,500px)`)
     xhr.onload = function() {
-        container.innerHTML = xhr.responseText;
+        container.innerHTML += xhr.responseText;
         change_image_src(container);
         document.body.appendChild(container);
 
