@@ -63,14 +63,37 @@ function excecute(click) {
     xhr.send();
 }
 
+const filtering = function() {
+    let words = document.getSelection().toString();
+    let word_array = [];
+    words.split(" ").forEach((word) => {
+        try {
+            word_array.push(word.match(/[a-zA-Z]+/)[0]);
+        } catch {
+            console.log("not full word");
+        }
+    })
+    return word_array;
+}
+
+function filter() {
+    let word_array = filtering();
+    if (word_array.length) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 document.body.addEventListener("dblclick", ((click) => {
 
     chrome.storage.local.get("status", (res) => {
-        if (res.status === "true") {
+
+        if (res.status === "true" && filter()) {
             console.log("excecuting");
             excecute(click);
         } else {
-            console.log("status:off");
+            console.log("status:off or not real word");
         }
     })
 
