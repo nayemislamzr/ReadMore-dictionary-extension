@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Readmore extension</title>
+    <!-- <link rel="stylesheet" href="index.css"> -->
+</head>
+
+<body>
+    <div class="dic-wrapper">
+        <!-- <div class="dic-head">Read More</div> -->
+        <!-- <div id="cross"></div> -->
+        <div id="loading">
+            <div id="load">
+                <span id="load_ball"></span>
+                <span id="load_ball"></span>
+                <span id="load_ball"></span>
+                <span id="load_ball"></span>
+                <span id="load_ball"></span>
+            </div>
+        </div>
+        <div class="dic-section">
+            <!-- anyword you are searching -->
+            <div class="head-sec">
+                <div class="word">
+                    <img class="readmore_dic_extension" src="chrome-extension://id/icons/black/right.svg" height="18px" width="18px">
+                    <span style="margin:10px;font-size: 18px;" id="src_word"></span>
+                </div>
+                <div class="feature">
+                    <div id="theme-changer">
+                        <label class="switch" for="checkbox">
+                            <input type="checkbox" id="checkbox"/>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <img class="readmore_dic_extension" id="translator" src="chrome-extension://id/icons/black/language-solid.svg">
+                    <img class="readmore_dic_extension" id="volume" src="chrome-extension://id/icons/black/volume-up-solid.svg">
+                </div>
+            </div>
+            <div class="pofspeech">
+                <!-- Noun -->
+            </div>
+            <template class="box-container">
+                <div class="box">
+                <div class="dic-inner-sec" id="definition">
+                    <div class="frame">
+                        <div class="header">Definition :</div>
+                        <div class="object"></div>
+                    </div>
+                </div>
+                <div class="dic-inner-sec" id="example">
+                    <div class="frame">
+                        <div class="header">Example :</div>
+                        <div class="object"></div>
+                    </div>
+                    <!-- this is a example -->
+                </div>
+                </div>
+            </template>
+        </div>
+        <!-- <div class="dic-foot">Made with <img src="heart.svg" height="17px" width="17px"> by nayemislamzr</div> -->
+    </div>
+    <!-- <script type="module" src="home.js"></script> -->
+    <!-- <script type="module" src="index.js"></script> -->
+</body>
+
+</html>

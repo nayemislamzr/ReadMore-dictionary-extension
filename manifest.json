@@ -1,0 +1,30 @@
+{
+    "manifest_version": 2,
+    "name": "Dick-tionary",
+    "version": "0.1",
+    "description": "A fucking dickTionary extension with a full of features",
+    "browser_action": {
+        "default_icon": "adjust.png",
+        "default_popup": "popup.html"
+    },
+    "content_scripts": [{
+        "matches": ["http://*/*", "https://*/*", "<all_urls>"],
+        "js": ["jquery.js", "test.js", "content.js"],
+        "css": ["index.css"]
+    }],
+    "background": {
+        "scripts": ["background.js"]
+    },
+    "web_accessible_resources": ["index.html",
+        "icons/black/next.svg",
+        "icons/black/right.svg",
+        "icons/black/404-error.svg",
+        "icons/black/volume-up-solid.svg",
+        "icons/black/language-solid.svg",
+        "icons/black/angle-double-down-solid.svg"
+    ],
+    "permissions": [
+        "activeTab",
+        "storage"
+    ]
+}
