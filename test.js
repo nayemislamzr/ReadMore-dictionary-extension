@@ -157,6 +157,7 @@ function show_items(mydic, DOMelements, majorcomp) {
                     span.innerText = def;
                     span.style.display = "list-item";
                     span.style.marginLeft = "10px";
+                    span.style.lineHeight = "1.4";
                     node.children[0].children[0].children[0].children[1].appendChild(span);
                 })
 
@@ -165,6 +166,7 @@ function show_items(mydic, DOMelements, majorcomp) {
                     span.innerText = example;
                     span.style.display = "list-item";
                     span.style.marginLeft = "10px";
+                    span.style.lineHeight = "1.4";
                     node.children[0].children[1].children[0].children[1].appendChild(span);
                 })
 

@@ -1,0 +1,70 @@
+* {
+    padding: 0px;
+    margin: 0px;
+}
+
+@font-face {
+    src: url(fonts/Lobster-Regular.ttf);
+    font-family: Lobster-Regular;
+}
+
+@font-face {
+    src: url(fonts/Montserrat-Regular.ttf);
+    font-family: Montserrat-Regular;
+}
+
+@font-face {
+    src: url(fonts/Montserrat-ExtraLight.ttf);
+    font-family: Montserrat-Extralight;
+}
+
+.header {
+    padding: 10px;
+    height: 40px;
+    position: sticky;
+    top: 0px;
+    z-index: 1;
+    background-color: rgb(246, 13, 121);
+    box-shadow: 0px 0px 5px 0px black;
+}
+
+.body {
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    font-size: 16px;
+}
+
+.option-field {
+    position: relative;
+    border-radius: 10px;
+    padding: 20px;
+    border: 1.5px solid rgb(95, 96, 99);
+    box-shadow: #333 0px .25em .5em -.25em;
+    margin-bottom: 40px;
+}
+
+.title {
+    font-family: Montserrat-Regular;
+    position: absolute;
+    background-color: white;
+    padding-left: 2px;
+    padding-right: 2px;
+    top: -12px;
+}
+
+.select-value {
+    font-family: Montserrat-Extralight;
+}
+
+.option-select {
+    margin-top: 20px;
+}
+
+h3 {
+    font-family: Lobster-Regular;
+    color: white;
+    font-size: 30px;
+    text-shadow: 2px 2px black;
+}

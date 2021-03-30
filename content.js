@@ -10,13 +10,14 @@ var globalVar = {
 function change_image_src(document) {
     document.querySelectorAll("img.readmore_dic_extension").forEach((img) => {
         img.src = img.src.substr(0, 18) + globalVar.id + img.src.substr(21, );
+        img.style.padding = "5px";
         // console.log(img.src);
     })
 }
 
 function excecute(click) {
-    let x = click.clientX;
-    let y = click.clientY;
+    let x = click.pageX;
+    let y = click.pageY;
 
     const xhr = new XMLHttpRequest();
 
@@ -30,7 +31,7 @@ function excecute(click) {
 
     const container = document.createElement("div");
     container.id = "readmore_extension";
-    container.setAttribute("style", `position:fixed;
+    container.setAttribute("style", `position:absolute;
                 z-index:1000;
                 top:${y}px;left:${x}px;
                 display:grid;
@@ -73,7 +74,7 @@ const filtering = function() {
             console.log("not full word");
         }
     })
-    return word_array;
+    return word_array; // here word array is retured cz may select multiple words
 }
 
 function filter() {

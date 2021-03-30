@@ -3,13 +3,23 @@
     --header-not-clicked: rgb(247 14 122);
 }
 
+@font-face {
+    font-family: lobster;
+    src: url(fonts/Lobster-Regular.ttf);
+}
+
+@font-face {
+    font-family: opensans;
+    src: url(fonts/OpenSans-Regular.ttf)
+}
+
 body {
     color: #fff;
     margin: 0;
     padding: 0;
     background: #fff;
     width: 300px;
-    font-family: Open Sans;
+    font-family: opensans;
 }
 
 .logo {
@@ -72,16 +82,17 @@ footer {
     text-align: center;
     padding: 10px 0 10px 0;
     background: rgb(23, 28, 48);
+    letter-spacing: 1px;
 }
 
 h1 {
-    font-size: 20px;
+    font-size: 25px;
     font-weight: bolder;
     margin: 0;
     letter-spacing: 10px;
     text-shadow: 3px 3px grey;
     -webkit-text-stroke: 1px darkolivegreen;
-    font-family: Ubuntu;
+    font-family: lobster;
 }
 
 .switch {

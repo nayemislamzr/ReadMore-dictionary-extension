@@ -1,0 +1,188 @@
+@font-face {
+    font-family: Montserrat-Thin;
+    src: url(fonts/Montserrat-Thin.ttf);
+}
+
+@font-face {
+    font-family: Montserrat-Regular;
+    src: url(fonts/Montserrat-Regular.ttf);
+}
+
+@font-face {
+    font-family: Montserrat-Extralight;
+    src: url(fonts/Montserrat-ExtraLight.ttf)
+}
+
+@font-face {
+    font-family: Lobster-Regular;
+    src: url(fonts/Lobster-Regular.ttf)
+}
+
+* {
+    padding: 0px;
+    margin: 0px;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    overflow: hidden;
+    position: sticky;
+    padding: 20px;
+    margin: 0px;
+    top: 0px;
+    background-color: white;
+    border-bottom: 2px solid rgb(150, 146, 146);
+}
+
+#name {
+    display: inline-block;
+}
+
+#name:hover,
+#name:active {
+    cursor: pointer;
+}
+
+.nav-list {
+    display: none;
+    position: fixed;
+    top: 80px;
+    background-color: #f9f9f9;
+    height: 100vh;
+    left: 0px;
+    border-right: 1px solid #d0c8c8;
+}
+
+li {
+    list-style: none;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: left;
+    border-bottom: 1px solid black;
+    text-align: left;
+    border-bottom: 0.5px solid #d0c8c8;
+    padding-left: 60px;
+    padding-right: 60px;
+}
+
+li:hover {
+    cursor: pointer;
+    background-color: rgb(236, 232, 232);
+}
+
+a {
+    text-decoration: none;
+}
+
+#skewed {
+    position: absolute;
+    content: "";
+    background-color: black;
+    border-right: 3px solid #d7d0d0;
+    border-left: 3px solid #d7d0d0;
+    box-shadow: -4px -4px 4px 3px black;
+    display: table-row;
+    bottom: 0px;
+    height: 100%;
+    width: 80px;
+    transform: skew(60deg);
+    right: -10px;
+}
+
+#skewed::after {
+    content: "";
+    position: absolute;
+    top: 15px;
+    background: url(icons/black/GitHub-Mark-Light-32px.png) no-repeat;
+    background-position: center;
+    height: 32px;
+    width: inherit;
+    transform: skew(-60deg);
+}
+
+.layout {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 500px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-top: 40px;
+}
+
+.layout details {
+    padding: 10px;
+    appearance: none;
+    margin-bottom: 30px;
+    background-color: #f9f9f9;
+    border-radius: 14px;
+    border-left: 1px solid #d7d0d0;
+    border-bottom: 1px solid #d7d0d0;
+}
+
+h1 {
+    font-family: Lobster-Regular;
+    font-size: 30px;
+    color: black;
+}
+
+h2 {
+    color: black;
+    font-size: 25px;
+    font-family: Montserrat-Thin;
+    margin-bottom: 20px;
+}
+
+h2::before {
+    content: "#";
+}
+
+h3 {
+    display: inline-block;
+    font-size: 21px;
+    font-weight: lighter;
+}
+
+h3:before {
+    display: inline-block;
+    font-family: Montserrat-Regular;
+    content: "";
+    background-image: url(icons/right.svg);
+    background-repeat: no-repeat;
+    height: 21px;
+    width: 21px;
+    padding-right: 10px;
+}
+
+h4 {
+    font-family: Montserrat-Regular;
+    font-size: 18px;
+    text-decoration: underline;
+    margin-bottom: 15px;
+}
+
+h4:hover,
+h4:active {
+    cursor: pointer;
+    font-weight: lighter;
+}
+
+h5 {
+    font-family: Montserrat-Extralight;
+    font-size: 14px;
+    line-height: 1.4;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+}
+
+.layout a {
+    color: rgb(13, 172, 119);
+    display: inline-block;
+    font-size: 18px;
+}
+
+.layout a:hover,
+.layout a:active {
+    color: rgb(56, 223, 167)
+}

@@ -15,6 +15,7 @@
     "background": {
         "scripts": ["background.js"]
     },
+    "options_page": "option.html",
     "web_accessible_resources": ["index.html",
         "index.css",
         "icons/black/next.svg",
@@ -22,7 +23,10 @@
         "icons/black/404-error.svg",
         "icons/black/volume-up-solid.svg",
         "icons/black/language-solid.svg",
-        "icons/black/angle-double-down-solid.svg"
+        "icons/black/angle-double-down-solid.svg",
+        "personal.html",
+        "personal.css",
+        "personal.js"
     ],
     "permissions": [
         "activeTab",

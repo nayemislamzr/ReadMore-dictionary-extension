@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Option</title>
+    <link rel="stylesheet" href="option.css">
+</head>
+
+<body>
+    <section class="header">
+        <h3>Read More</h3>
+    </section>
+    <section class="body">
+        <div class="option-field" id="themes">
+            <div class="title">Themes</div>
+            <div class="select-value">
+                <div class="radio-select">
+                    <input type="radio" id="light" name="themes" value="light">
+                    <label for="light">Light</label><br>
+                    <input type="radio" id="dark" name="themes" value="dark">
+                    <label for="dark">Dark</label><br>
+                    <input type="radio" id="custom" name="themes" value="custom">
+                    <label for="custom">Custom</label>
+                </div>
+                <div class="option-select">
+                    <select id="theme-select">
+                    <option>Light-Green</option>
+                    <option>Dark-Red</option>
+                    <option>Viola</option>
+                </select>
+                </div>
+            </div>
+        </div>
+        <div class="option-field" id="cache">
+            <div class="title">Cache</div>
+            <div class="select-value">
+                <div class="radio-select">
+                    <input type="radio" id="on" name="cache" value="on">
+                    <label for="on">on</label>
+                    <input type="range" id="cache-amount" min="10" max="1000" value="0" style="margin-left:220px;"><br>
+                    <p id="cache-val" style="margin-left:280px;">1000 words</p>
+                    <input type="radio" id="off" name="cache" value="off">
+                    <label for="off">off</label><br>
+                </div>
+            </div>
+        </div>
+        <div class="option-field" id="Allowed Sites">
+            <div class="title">Allowed Sites</div>
+            <div class="select-value">
+                <div class="radio-select">
+                    <input type="radio" id="all" name="allow-site" value="all">
+                    <label for="all">All Sites</label><br>
+                    <input type="radio" id="social" name="allow-site" value="social">
+                    <label for="social">Except Social Sites</label><br>
+                    <input type="radio" id="custom" name="allow-site" value="custom">
+                    <label for="custom">Custom Block</label>
+                </div>
+                <div class="option-select">
+                    <input id="custom-site" type="text" placeholder="Site You want to Block" style="height: 25px;"> <button style="margin-left:20px;background-color:rgb(246, 13, 121);padding:7px;color:white;border: 1px solid rgb(68, 64, 64);border-radius: 8px;">Submit</button>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>

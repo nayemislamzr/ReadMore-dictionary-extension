@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Info</title>
+    <link rel="stylesheet" href="personal.css">
+</head>
+
+<body>
+    <div class="header">
+        <div id="name">
+            <h1>nayemislamzr</h1>
+        </div>
+        <div id="skewed"></div>
+        <div class="nav-list">
+            <ul>
+                <a href="#about">
+                    <li>
+                        <h2>About</h2>
+                    </li>
+                </a>
+                <a href="#projects">
+                    <li>
+                        <h2>Projects</h2>
+                    </li>
+                </a>
+                <a href="#misc">
+                    <li>
+                        <h2>Misc</h2>
+                    </li>
+                </a>
+            </ul>
+        </div>
+    </div>
+    <div class="layout">
+        <section id="project">
+            <a id="projects">
+                <h2>Projects</h2>
+            </a>
+            <div id="info">
+
+                <details>
+                    <summary>
+                        <h4>Read More</h4>
+                        <h5>Read More is a chrome extension for quick word dictionary . Just by double click , <big><q>Read More</q></big> can give you definition , pronunciation & example of the selected word.</h5>
+                    </summary>
+                    <h5>
+                        <u>How does this work :</u>
+                    </h5>
+                    <h5>A <big>background script</big> will always be running under the hood . That will wait for different events and will connect current <big>DOM</big>(<i>Document Object Model</i>) with <big>content script</big> & <big>popup script</big>                        . On double click <big>content script</big> will get the selected text then it will call a <big>fetch api</big> for information about the text . The result will then be poped up on the screen . </h5>
+                    </h5>
+                    <h3> Link :
+                        <a href="https://github.com/nayemislamzr/ReadMore-dictionary-extension">Read More</a>
+                    </h3>
+                </details>
+                <details>
+                    <summary>
+                        <h4>Quick Reader</h4>
+                        <h5>
+                            Quick Reader is html parser based application that can turn any obscure gibberish looking site to well ordered & Readable with tons of extra features.
+                        </h5>
+                    </summary>
+                    <h5>
+                        <u>How does this work :</u>
+                    </h5>
+                    <h5>
+                        With the help of <a href="https://github.com/mozilla/readability"><big>readability</big></a> library the main part of the body (<big>Article</big>) will be differentiated . Then <big><q>Quick Reader</q></big> will be used as a
+                        template (
+                        <big>frame</big>) for inhancing reading experience. Moreover , <big>Quick Reader</big> will offer a tons of feature such as font , background , theme changing & search in text ,etc.
+                    </h5>
+                    <h3> Link :
+                        <a href="https://github.com/nayemislamzr/Read-More-">Quick Read</a>
+                    </h3>
+                </details>
+            </div>
+        </section>
+        <section id="about">
+            <a id="about">
+                <h2>About</h2>
+            </a>
+            <h5>Myself nayemislamzr . Passionate about programming but knows nothing of it :( </h5>
+            <h5>Hometown : <address>Bogra, Bangladesh</address></h5>
+            <h5>Current Address :
+                <strike>Sylhet, Bangladesh</strike>
+                <address>Bogra, Bangladesh</address>
+            </h5>
+        </section>
+    </div>
+    <script src="personal.js">
+    </script>
+</body>
+
+</html>
