@@ -86,6 +86,7 @@ function filter() {
     }
 }
 
+
 document.body.addEventListener("dblclick", ((click) => {
 
     chrome.storage.local.get("status", (res) => {

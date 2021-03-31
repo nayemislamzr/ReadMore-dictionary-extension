@@ -1,16 +1,3 @@
-// var majorcomp = {
-//     template: document.querySelector("body div.dic-section template.box-container"),
-//     section: document.querySelector("body div.dic-section"),
-//     box: document.querySelector("body div.dic-section div.box"),
-//     pofspeech: document.querySelector("body div.dic-section  div.pofspeech"),
-//     definition: document.querySelector("body div.dic-section div.box div[id='definition']"),
-//     example: document.querySelector("body div.dic-section div.box div[id='example']"),
-//     audio: document.querySelector("body div.dic-wrapper div.dic-section div.feature img[id='volume']"),
-//     loading: document.getElementById("loading"),
-//     loadBall: document.querySelectorAll("span[id='load_ball']"), // returns array
-//     theme_changer: document.querySelector("body div.dic-section div.feature div#theme-changer input#checkbox"),
-// }
-
 function createDOMelements() {
     return {
         mydic: {
@@ -122,6 +109,8 @@ function get_items(file, mydic) {
             mydic['audio'].push(phonetic['audio']);
         }
     }
+
+    chrome.storage.local.set({ "cache": { "test": mydic } });
 }
 
 const delete_prev_item = function() {
@@ -225,15 +214,18 @@ function dom_items(majorcomp) {
     /////theme changer
     ////////
 
-    let themeStatus = false;
+    let themeStatus = majorcomp.theme_changer.checked;
 
-    majorcomp.theme_changer.addEventListener("change", ((v) => {
-        themeStatus = !(themeStatus);
-        if (themeStatus)
+    majorcomp.theme_changer.addEventListener("change", () => {
+        themeStatus = !themeStatus;
+        if (themeStatus) {
+            chrome.storage.local.set({ "theme": "dark" });
             document.documentElement.setAttribute("theme", "redPink-dark");
-        else
+        } else {
+            chrome.storage.local.set({ "theme": "light" });
             document.documentElement.setAttribute("theme", "light-theme");
-    }), false)
+        }
+    }, false)
 
     ///////
     ///check for off focus
@@ -251,8 +243,38 @@ function dom_items(majorcomp) {
 
 }
 
+function select_theme(majorcomp) {
+    chrome.storage.local.get("theme", (response) => {
+        switch (response.theme) {
+            case "dark":
+                {
+                    document.documentElement.setAttribute("theme", "redPink-dark");
+                    majorcomp.theme_changer.checked = "true";
+                    break;
+                }
+            case "light":
+                {
+                    document.documentElement.setAttribute("theme", "light-theme");
+                    majorcomp.theme_changer.checked = "false";
+                    break;
+                }
+            default:
+                {
+                    document.documentElement.setAttribute("theme", "redPink-dark");
+                    majorcomp.theme_changer.checked = "true";
+                }
+        }
+    })
+}
+
+function appearance(majorcomp) {
+    select_theme(majorcomp);
+}
+
 async function fetch_ahead(majorcomp) {
     console.log("starting fetching data");
+
+    appearance(majorcomp);
 
     if (majorcomp.loading.children.length === 2)
         majorcomp.loading.children[1].remove();
