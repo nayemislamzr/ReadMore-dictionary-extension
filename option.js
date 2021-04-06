@@ -6,7 +6,10 @@ componants = {
     cache_range: document.querySelector("body input#cache-range"),
     cache_value: document.querySelector("body span#cache-value"),
     reset_settings: document.querySelector("body button#reset-settings"),
-    clear_data: document.querySelector("body button#clear-data")
+    clear_data: document.querySelector("body button#clear-data"),
+    theme_select: document.querySelector("body select#theme-select"),
+    custom_site_input: document.querySelector("body input#custom-site-input"),
+    custom_site_submit: document.querySelector("body button#custom-site-submit"),
 }
 
 function get_pref() {
@@ -32,12 +35,42 @@ function create_new_pref() {
     return new_pref;
 }
 
+function __on__off__option__select(id, name) {
+    if (name === "themes") {
+        if (id === "custom-theme") {
+            componants.theme_select.disabled = false;
+        } else {
+            componants.theme_select.disabled = true;
+        }
+    } else if (name === "cache") {
+        if (componants.cache_check.checked) {
+            componants.cache_range.disabled = false;
+        } else {
+            componants.cache_range.disabled = true;
+        }
+    } else if (name === "allow-site") {
+        if (id === "custom-site") {
+            componants.custom_site_input.disabled = false;
+            componants.custom_site_submit.disabled = false;
+        } else {
+            componants.custom_site_input.disabled = true;
+            componants.custom_site_submit.disabled = true;
+        }
+    }
+}
+
+function show_saved() {
+    componants.saved.style.display = "block";
+    setTimeout(() => {
+        componants.saved.style.display = "none";
+    }, 1000);
+}
+
 function show_prev_pref(old_pref) {
 
     //ALL THE RADIO SELECT
     //theme
     document.querySelector(`div#themes`).querySelector(`input#${old_pref["themes"]}`).checked = true;
-
     //allow-site
     document.querySelector(`div#allowed-sites`).querySelector(`input#${old_pref["allow-site"]}`).checked = true;
 
@@ -48,17 +81,17 @@ function show_prev_pref(old_pref) {
     componants.cache_check.checked = old_pref["cache"];
     componants.cache_value.innerText = `${old_pref["cache-value"]} words`;
 
+    //OPTION SELECT
+    //cache-range disable enable
+    __on__off__option__select(old_pref["themes"], "themes");
+    __on__off__option__select(old_pref["allow-site"], "allow-site");
+    __on__off__option__select(old_pref["cache"], "cache");
 
 }
 
 
 function change_pref() {
-    function show_saved() {
-        componants.saved.style.display = "block";
-        setTimeout(() => {
-            componants.saved.style.display = "none";
-        }, 1000);
-    }
+
 
     function save_item(name, value) {
         // console.log("getting preference");
@@ -78,8 +111,10 @@ function change_pref() {
 
     }
 
+
     componants.radio_select.forEach((select) => {
         select.addEventListener("click", (item) => {
+            __on__off__option__select(item.target.id, item.target.name);
             switch (item.target.type) {
                 case "radio":
                     {
@@ -93,8 +128,6 @@ function change_pref() {
                         break;
                     }
             }
-
-            show_saved();
         })
     })
 
@@ -150,5 +183,8 @@ const init = (async() => {
 
     // console.log("preparing")
     //change preference
+    document.body.addEventListener("change", () => {
+        show_saved();
+    })
     change_pref();
 })()
