@@ -76,7 +76,7 @@ function show_prev_pref(old_pref) {
 
 
     //CACHE DOM SHOW
-    console.log(old_pref);
+    // console.log(old_pref);
     componants.cache_range.value = old_pref["cache-value"];
     componants.cache_check.checked = old_pref["cache"];
     componants.cache_value.innerText = `${old_pref["cache-value"]} words`;
@@ -136,7 +136,7 @@ function change_pref() {
         get_pref()
             .then((pref) => {
                 try {
-                    console.log(e.target.value);
+                    // console.log(e.target.value);
                     pref["cache-value"] = e.target.value;
                     componants.cache_value.innerText = `${e.target.value} words`;
                     chrome.storage.local.set({ preference: pref })
