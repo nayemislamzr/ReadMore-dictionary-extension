@@ -13,6 +13,7 @@
     <section class="header">
         <h3>Read More</h3>
     </section>
+    <div class="saved">Option Saved</div>
     <section class="body">
         <div class="option-field" id="themes">
             <div class="title">Themes</div>
@@ -22,8 +23,8 @@
                     <label for="light">Light</label><br>
                     <input type="radio" id="dark" name="themes" value="dark">
                     <label for="dark">Dark</label><br>
-                    <input type="radio" id="custom" name="themes" value="custom">
-                    <label for="custom">Custom</label>
+                    <input type="radio" id="custom-theme" name="themes" value="custom">
+                    <label for="custom-theme">Custom</label>
                 </div>
                 <div class="option-select">
                     <select id="theme-select">
@@ -38,16 +39,34 @@
             <div class="title">Cache</div>
             <div class="select-value">
                 <div class="radio-select">
-                    <input type="radio" id="on" name="cache" value="on">
-                    <label for="on">on</label>
-                    <input type="range" id="cache-amount" min="10" max="1000" value="0" style="margin-left:220px;"><br>
-                    <p id="cache-val" style="margin-left:280px;">1000 words</p>
-                    <input type="radio" id="off" name="cache" value="off">
-                    <label for="off">off</label><br>
+                    <label class="switch" for="cache-checkbox">
+                        <input type="checkbox" id="cache-checkbox" name="cache">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="option-select">
+                    <input type="range" id="cache-range" name="cache-range" min="0" max="10000" style="width: 72%;">
+                    <span id="cache-value" style="margin-left: 20px;
+                                                color: deeppink;
+                                                font-weight: bold;">0 words</span>
+                    <button id="reset-settings" style="position: absolute;
+                                right: 8px;
+                                top: 21px;
+                                width: max-content;
+                                margin: auto;">
+                                Reset Settings</button>
+                    <button id="clear-data" style="
+                                position: absolute;
+                                right: 149px;
+                                top: 21px;
+                                width: max-content;
+                                margin: auto;
+                                ">
+                                Clear Data</button>
                 </div>
             </div>
         </div>
-        <div class="option-field" id="Allowed Sites">
+        <div class="option-field" id="allowed-sites">
             <div class="title">Allowed Sites</div>
             <div class="select-value">
                 <div class="radio-select">
@@ -55,11 +74,11 @@
                     <label for="all">All Sites</label><br>
                     <input type="radio" id="social" name="allow-site" value="social">
                     <label for="social">Except Social Sites</label><br>
-                    <input type="radio" id="custom" name="allow-site" value="custom">
-                    <label for="custom">Custom Block</label>
+                    <input type="radio" id="custom-site" name="allow-site" value="custom">
+                    <label for="custom-site">Custom Block</label>
                 </div>
                 <div class="option-select">
-                    <input id="custom-site" type="text" placeholder="Site You want to Block" style="height: 25px;"> <button style="margin-left:20px;background-color:rgb(246, 13, 121);padding:7px;color:white;border: 1px solid rgb(68, 64, 64);border-radius: 8px;">Submit</button>
+                    <input id="custom-site" type="text" placeholder="Site You want to Block" style="width: 73%;"> <button style="margin-left:20px;">Submit</button>
                 </div>
             </div>
         </div>

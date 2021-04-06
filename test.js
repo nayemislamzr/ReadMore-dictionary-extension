@@ -1,9 +1,12 @@
 function createDOMelements() {
     return {
         mydic: {
-            "audio": []
-        },
-        srch_word: '',
+            "meanings": {
+
+            },
+            "audio": [],
+            "word": '',
+        }
     }
 }
 
@@ -21,13 +24,13 @@ function loading(t) {
     });
 }
 
-async function wow(majorcomp) {
+async function loading_screen() {
     let t = 0,
         x = 0;
     const w = ((2 * Math.PI) * 0.25);
     var theta = [];
 
-    majorcomp.loadBall.forEach((ball) => {
+    componants.loadBall.forEach((ball) => {
         x %= 4;
         let th = (25 * Math.sin(w * x));
         if (th > -1)
@@ -39,7 +42,7 @@ async function wow(majorcomp) {
     while (i < 60) {
         t %= 4;
         let a = await loading(t).then((t) => {
-            majorcomp.loadBall.forEach((ball, index) => {
+            componants.loadBall.forEach((ball, index) => {
                 var res = (25 * Math.sin(w * t + (Math.sinh(theta[index]) / 25) * (Math.PI / 180)));
                 ball.style.top = `${res}px`;
             })
@@ -47,10 +50,11 @@ async function wow(majorcomp) {
         t++;
         i++;
         if (globalVariables.fetched || globalVariables.error) {
+            globalVariables.fetched = false;
             break;
         }
     }
-    if (i >= 60 || globalVariables.fetched || globalVariables.error) {
+    if (i >= 60 || globalVariables.error) {
         let notfound = document.createElement("div");
         notfound.id = "not-found-wrapper";
         let notfoundImage = document.createElement("img");
@@ -61,9 +65,12 @@ async function wow(majorcomp) {
         msg.innerText = "Not Found";
         msg.id = "notfoundmessage";
         notfound.appendChild(msg);
-        majorcomp.loading.appendChild(notfound);
+        componants.loading.appendChild(notfound);
         globalVariables.error = false;
         globalVariables.fetched = false;
+
+        off_focus();
+
     }
 }
 
@@ -72,6 +79,8 @@ async function fetching(input) {
         const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en_US/${input}`);
         let file = await response.json();
         console.log("Data has been fetched successfully");
+        globalVariables.fetched = true;
+        componants.loading.style.display = "none";
         return file;
     } catch (error) {
         console.error("Error occured during data was fetching..try again!!!");
@@ -81,22 +90,25 @@ async function fetching(input) {
 }
 
 function get_items(file, mydic) {
+
+    mydic.word = file[0]["word"];
+
     for (let obj of file) {
         for (let meaning of obj["meanings"]) {
             let partofspeech = meaning['partOfSpeech'];
-            if (!(partofspeech in mydic)) {
-                mydic[partofspeech] = new Object({
+            if (!(partofspeech in mydic.meanings)) {
+                mydic.meanings[partofspeech] = new Object({
                     "definition": [],
                     "example": [],
                     "synonym": []
                 })
             }
             for (let def of meaning["definitions"]) {
-                if ('definition' in def) mydic[partofspeech]["definition"].push(def['definition']);
-                if ('example' in def) mydic[partofspeech]["example"].push(def['example']);
+                if ('definition' in def) mydic.meanings[partofspeech]["definition"].push(def['definition']);
+                if ('example' in def) mydic.meanings[partofspeech]["example"].push(def['example']);
                 if ('synonyms' in def) {
                     for (let synonym of def['synonyms']) {
-                        mydic[partofspeech]['synonym'].push(synonym);
+                        mydic.meanings[partofspeech]['synonym'].push(synonym);
                     }
                 }
             }
@@ -110,7 +122,10 @@ function get_items(file, mydic) {
         }
     }
 
-    chrome.storage.local.set({ "cache": { "test": mydic } });
+    let obj = {};
+    obj[mydic.word] = mydic;
+    console.log(obj);
+    chrome.storage.local.set(obj);
 }
 
 const delete_prev_item = function() {
@@ -119,74 +134,63 @@ const delete_prev_item = function() {
     })
 }
 
-function show_items(mydic, DOMelements, majorcomp) {
+function show_items(mydic) {
 
     /////////////
     ////show word
     ////////////
 
-    document.querySelector("body div.dic-wrapper div.head-sec span[id='src_word']").innerHTML = `<q>${DOMelements.srch_word}</q>`;
+    document.querySelector("body div.dic-wrapper div.head-sec span[id='src_word']").innerHTML = `<q>${mydic.word}</q>`;
+    globalVariables.audio_src = mydic["audio"][0];
 
     let ul = document.createElement("ul");
 
-    for (let key in mydic) {
-        if (key != "audio") {
-            (() => {
+    for (let key in mydic.meanings) {
 
-                let template = majorcomp.template;
-                let node = document.importNode(template.content, true);
+        let template = componants.template;
+        let node = document.importNode(template.content, true);
 
-                node["children"][0].id = key.toLowerCase();
-                let pofspeech_list = document.createElement("li");
-                pofspeech_list.innerText = key;
-                ul.appendChild(pofspeech_list);
+        node["children"][0].id = key.toLowerCase();
+        let pofspeech_list = document.createElement("li");
+        pofspeech_list.innerText = key;
+        ul.appendChild(pofspeech_list);
 
-                mydic[key]["definition"].forEach(def => {
-                    let span = document.createElement("div");
-                    span.innerText = def;
-                    span.style.display = "list-item";
-                    span.style.marginLeft = "10px";
-                    span.style.lineHeight = "1.4";
-                    node.children[0].children[0].children[0].children[1].appendChild(span);
-                })
+        mydic.meanings[key]["definition"].forEach(def => {
+            let textResult = document.createElement("div");
+            textResult.innerText = def;
+            textResult.class = "readmore-extension-text-area";
+            node.children[0].children[0].children[0].children[1].appendChild(textResult);
+        });
 
-                mydic[key]["example"].forEach(example => {
-                    let span = document.createElement("div");
-                    span.innerText = example;
-                    span.style.display = "list-item";
-                    span.style.marginLeft = "10px";
-                    span.style.lineHeight = "1.4";
-                    node.children[0].children[1].children[0].children[1].appendChild(span);
-                })
+        mydic.meanings[key]["example"].forEach(example => {
+            let textResult = document.createElement("div");
+            textResult.innerText = example;
+            textResult.class = "readmore-extension-text-area";
+            node.children[0].children[1].children[0].children[1].appendChild(textResult);
+        });
 
-                if (mydic[key]["example"].length === 0) {
-                    node.children[0].children[1].children[0].remove();
-                }
-
-                if (mydic[key]["definition"].length === 0) {
-                    node.children[0].children[0].children[0].remove();
-                }
-
-                majorcomp.section.appendChild(node);
-            })();
+        if (mydic.meanings[key]["example"].length === 0) {
+            node.children[0].children[1].children[0].remove();
         }
+
+        if (mydic.meanings[key]["definition"].length === 0) {
+            node.children[0].children[0].children[0].remove();
+        }
+
+        componants.section.appendChild(node);
     }
 
-    if (majorcomp.pofspeech.children.length) {
-        majorcomp.pofspeech.children[0].replaceWith(ul);
-    } else {
-        majorcomp.pofspeech.appendChild(ul);
-    }
+    componants.pofspeech.appendChild(ul);
 }
 
-function dom_items(majorcomp) {
-    majorcomp.section.children[3].style.display = "block";
+function dom_items() {
+    componants.section.children[3].style.display = "block";
 
     let clickedArray = [];
-    //  clickedArray.push(majorcomp.pofspeech.children[0].children[0].innerText.toLowerCase());
-    clickedArray.push(majorcomp.pofspeech.children[0].children[0]);
+    //  clickedArray.push(componants.pofspeech.children[0].children[0].innerText.toLowerCase());
+    clickedArray.push(componants.pofspeech.children[0].children[0]);
 
-    majorcomp.pofspeech.children[0].addEventListener("click", (e) => {
+    componants.pofspeech.children[0].addEventListener("click", (e) => {
         if (e.target.tagName === "LI") {
             let topItem = clickedArray.pop();
             topItem.setAttribute("style", "border:1px solid transparent;");
@@ -200,12 +204,12 @@ function dom_items(majorcomp) {
 
 
 
-    majorcomp.section.querySelectorAll(("div.object"), 'before').forEach((e) => e.addEventListener("click", () => {
+    componants.section.querySelectorAll(("div.object"), 'before').forEach((e) => e.addEventListener("click", () => {
         e.setAttribute("style", "max-height:100%;")
     }), false)
 
 
-    majorcomp.audio.addEventListener("click", () => {
+    componants.audio.addEventListener("click", () => {
         let audio = new Audio(globalVariables.audio_src);
         audio.play();
     }, false)
@@ -214,16 +218,16 @@ function dom_items(majorcomp) {
     /////theme changer
     ////////
 
-    let themeStatus = majorcomp.theme_changer.checked;
+    let themeStatus = componants.theme_changer.checked;
 
-    majorcomp.theme_changer.addEventListener("change", () => {
+    componants.theme_changer.addEventListener("change", () => {
         themeStatus = !themeStatus;
         if (themeStatus) {
             chrome.storage.local.set({ "theme": "dark" });
             document.documentElement.setAttribute("theme", "redPink-dark");
         } else {
             chrome.storage.local.set({ "theme": "light" });
-            document.documentElement.setAttribute("theme", "light-theme");
+            document.documentElement.setAttribute("theme", "redPink-light");
         }
     }, false)
 
@@ -231,6 +235,10 @@ function dom_items(majorcomp) {
     ///check for off focus
     //////
 
+    off_focus();
+}
+
+function off_focus() {
     document.body.addEventListener("click", ((click) => {
         try {
             if (!(document.querySelector("body div#readmore_extension").contains(click.target))) {
@@ -240,63 +248,69 @@ function dom_items(majorcomp) {
             // as clicked item can be empty(none)   
         }
     }))
-
 }
 
-function select_theme(majorcomp) {
+function remove_error_msg() {
+    if (componants.loading.children.length === 2)
+        componants.loading.children[1].remove();
+    componants.loading.style.display = "block";
+}
+
+function select_theme() {
     chrome.storage.local.get("theme", (response) => {
         switch (response.theme) {
             case "dark":
                 {
                     document.documentElement.setAttribute("theme", "redPink-dark");
-                    majorcomp.theme_changer.checked = "true";
+                    componants.theme_changer.checked = "true";
                     break;
                 }
             case "light":
                 {
-                    document.documentElement.setAttribute("theme", "light-theme");
-                    majorcomp.theme_changer.checked = "false";
+                    document.documentElement.setAttribute("theme", "redPink-light");
+                    componants.theme_changer.checked = "false";
                     break;
                 }
             default:
                 {
                     document.documentElement.setAttribute("theme", "redPink-dark");
-                    majorcomp.theme_changer.checked = "true";
+                    componants.theme_changer.checked = "true";
                 }
         }
     })
 }
 
-function appearance(majorcomp) {
-    select_theme(majorcomp);
+function appearance() {
+    remove_error_msg();
+    select_theme();
 }
 
 async function fetch_ahead(majorcomp) {
     console.log("starting fetching data");
+    globalThis.componants = majorcomp;
+    appearance();
 
-    appearance(majorcomp);
+    var word = document.getSelection().toString(); // get the selected text
+    console.log(word);
 
-    if (majorcomp.loading.children.length === 2)
-        majorcomp.loading.children[1].remove();
-    majorcomp.loading.style.display = "block";
+    loading_screen(); // load screen
 
-    let input = document.getSelection().toString();
-    console.log(input);
-    wow(majorcomp);
-    await fetching(input)
+    // chrome.storage.local.get(word,(response)=>{
+    //     if(response.)
+    // })
+
+    await fetching(word)
         .then((response) => {
             let file = response;
+
             let DOMelements = createDOMelements();
-            DOMelements.srch_word = file[0]["word"];
-            globalVariables.fetched = true;
-            majorcomp.loading.style.display = "none";
             let mydic = DOMelements.mydic;
-            get_items(file, mydic, majorcomp); // getting data from json format
+
+            get_items(file, mydic); // getting data from json format
             console.log("Data has been parsed Successfully");
             delete_prev_item(); // will delete previous shown results if have any
-            show_items(mydic, DOMelements, majorcomp); // showing in html
-            globalVariables.audio_src = mydic["audio"][0];
-            dom_items(majorcomp);
+            show_items(mydic); // showing in html
+            dom_items();
         })
         .catch(() => {
             console.log("Error occured during parsing data!!! or showing DOM items");
@@ -304,4 +318,5 @@ async function fetch_ahead(majorcomp) {
         })
 
     console.log("Executed Successfully...");
-}
+
+};

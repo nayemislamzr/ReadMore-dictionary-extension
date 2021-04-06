@@ -2,9 +2,9 @@ const componants = {
     checkbox: document.querySelector("input#checkbox"),
     slider: document.querySelector("span[class='slider round']"),
     header: document.querySelector("header"),
-    logo: document.querySelectorAll("img.logo"),
-    myinfo: document.querySelector("img#myinfo"),
-    option: document.querySelector("img#option"),
+    logo: document.querySelectorAll("div.logo"),
+    myinfo: document.querySelector("div#myinfo"),
+    option: document.querySelector("div#option"),
 }
 
 function config() {
@@ -38,8 +38,49 @@ const unchecked_style = function() {
     }
 }
 
-function init() {
-    $(document).ready(config());
+class storage {
+
+    static addkey = () => {
+
+    }
+
+    static get = () => {
+        const cachePromise = new Promise((resolve, reject) => {
+            chrome.storage.local.get(key, (response) => {
+                if (!(key in response)) {
+                    reject("not found in cache");
+                } else {
+                    console.log("found");
+                    resolve(response[key]);
+                }
+
+            })
+        });
+        return cachePromise;
+    }
+
+    static update = (key, obj) => {
+        chrome.storage.local.set({ key: obj });
+    }
+
+    static clear = () => {
+
+    }
+
+    static remove = () => {
+
+    }
+
+}
+
+async function init() {
+    config();
+
+    try {
+
+    } catch (error) {
+        console.error(error);
+    }
 
     componants.checkbox.addEventListener("change", () => {
         chrome.storage.local.get("status", (res) => {
@@ -68,8 +109,12 @@ function init() {
     })
 
     componants.option.addEventListener("click", () => {
-        window.open("option.html", "_blank");
+        if (chrome.runtime.openOptionsPage) {
+            chrome.runtime.openOptionsPage();
+        } else {
+            window.open("option.html", "_blank");
+        }
     })
 }
 
-init();
+document.addEventListener("DOMContentLoaded", init);

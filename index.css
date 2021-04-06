@@ -38,6 +38,18 @@
     --text-font-color: white;
 }
 
+[theme="redPink-light"] {
+    --header-footer-bg-color: rgb(40, 40, 49);
+    --section-bg-color: white;
+    --text-bg-color: #eae9e9;
+    --theme-bg-color: rgb(236, 68, 115);
+    --slider-check-bg-color: rgb(232, 34, 89);
+    --theme-bg-hover-color: rgb(91, 92, 95);
+    --feature-hover-color: rgb(240, 116, 151);
+    --theme-font-color: black;
+    --text-font-color: black;
+}
+
 .dic-wrapper {
     box-shadow: 0px 0px 2px 2px grey;
     border-radius: 20px;
@@ -150,6 +162,23 @@
     font-weight: bolder;
     letter-spacing: 5px;
     content: "Not Found";
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+    border-radius: 10px;
+}
+
+ ::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+ ::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+ ::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
 
 .head-sec {
@@ -358,6 +387,12 @@ input:checked+.slider:before {
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
     background-color: var(--theme-bg-color);
+}
+
+.readmore-extension-text-area {
+    display: "list-item";
+    margin-left: "10px";
+    line-height: "1.4";
 }
 
 
