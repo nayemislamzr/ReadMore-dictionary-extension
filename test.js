@@ -13,7 +13,8 @@ function createDOMelements() {
 var globalVariables = {
     fetched: false,
     error: false,
-    audio_src: ''
+    audio_src: '',
+    src_word: '',
 }
 
 function loading(t) {
@@ -74,6 +75,50 @@ async function loading_screen() {
     }
 }
 
+function create_new_dictionary() {
+    let object = new Promise((resolve) => {
+        chrome.storage.local.set({ dictionary: {} });
+        resolve();
+    })
+    return object;
+}
+
+function get_dictionary() {
+    let object = new Promise((resolve) => {
+        chrome.storage.local.get("dictionary", (response) => {
+            if (!("dictionary" in response)) {
+                console.log("creating new dictionary")
+                create_new_dictionary()
+                    .then(() => {
+                        console.log("created new dictionary");
+                        resolve({});
+                    })
+                    .catch(() => {
+                        console.log("error occured while creating new dictionary")
+                    })
+            } else {
+                let copy_dictionary = response.dictionary;
+                resolve(copy_dictionary);
+            }
+        })
+    })
+    return object;
+}
+
+function cache_word(selected_text, word_obj) {
+    console.log("getting dictionary");
+    get_dictionary()
+        .then((copy_dictionary) => {
+            // console.log(copy_dictionary);
+            console.log("got dictionary");
+            copy_dictionary[selected_text] = word_obj;
+            chrome.storage.local.set({ dictionary: copy_dictionary });
+        })
+        .catch(() => {
+            console.log("error while setting cache");
+        })
+}
+
 async function fetching(input) {
     try {
         const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en_US/${input}`);
@@ -122,11 +167,16 @@ function get_items(file, mydic) {
         }
     }
 
-    let obj = {};
-    obj[mydic.word] = mydic;
-    console.log(obj);
-    chrome.storage.local.set(obj);
+    ///////////////
+    ///////Caching Word
+    //////////////
+
+    cache_word(globalVariables.src_word, mydic);
 }
+
+/////////////
+/////deletes previous showed result
+/////////////
 
 const delete_prev_item = function() {
     document.querySelectorAll("div.box").forEach((box) => {
@@ -285,38 +335,64 @@ function appearance() {
     select_theme();
 }
 
-async function fetch_ahead(majorcomp) {
+/////////////
+//////removes loading screen and deletes previous items also
+////////////
+
+function prepare_result() {
+    globalVariables.fetched = true;
+    componants.loading.style.display = "none";
+    delete_prev_item(); // will delete previous shown results if have any
+}
+
+function get_word(word) {
+    get_dictionary()
+        .then(async(copy_dictionary) => {
+            if (word in copy_dictionary) {
+                console.log("found in cache");
+                let mydic = copy_dictionary[word];
+                // console.log(mydic);
+
+                prepare_result();
+
+                show_items(mydic); // showing in html
+                dom_items();
+            } else {
+                console.log("not found in cache");
+                await fetching(word)
+                    .then((response) => {
+                        let file = response;
+
+                        let DOMelements = createDOMelements();
+                        let mydic = DOMelements.mydic;
+
+                        get_items(file, mydic); // getting data from json format
+                        console.log("Data has been parsed Successfully");
+                        delete_prev_item(); // will delete previous shown results if have any
+
+                        show_items(mydic); // showing in html
+                        dom_items();
+                    })
+                    .catch(() => {
+                        console.log("Error occured during parsing data!!! or showing DOM items");
+                        globalVariables.error = true;
+                    })
+            }
+        })
+}
+
+function fetch_ahead(majorcomp) {
     console.log("starting fetching data");
     globalThis.componants = majorcomp;
     appearance();
 
     var word = document.getSelection().toString(); // get the selected text
     console.log(word);
+    globalVariables.src_word = word;
 
     loading_screen(); // load screen
 
-    // chrome.storage.local.get(word,(response)=>{
-    //     if(response.)
-    // })
-
-    await fetching(word)
-        .then((response) => {
-            let file = response;
-
-            let DOMelements = createDOMelements();
-            let mydic = DOMelements.mydic;
-
-            get_items(file, mydic); // getting data from json format
-            console.log("Data has been parsed Successfully");
-            delete_prev_item(); // will delete previous shown results if have any
-            show_items(mydic); // showing in html
-            dom_items();
-        })
-        .catch(() => {
-            console.log("Error occured during parsing data!!! or showing DOM items");
-            globalVariables.error = true;
-        })
+    get_word(globalVariables.src_word);
 
     console.log("Executed Successfully...");
-
 };
