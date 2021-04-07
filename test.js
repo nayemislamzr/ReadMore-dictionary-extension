@@ -208,14 +208,14 @@ function show_items(mydic) {
         mydic.meanings[key]["definition"].forEach(def => {
             let textResult = document.createElement("div");
             textResult.innerText = def;
-            textResult.class = "readmore-extension-text-area";
+            textResult.className = "readmore-extension-text-area";
             node.children[0].children[0].children[0].children[1].appendChild(textResult);
         });
 
         mydic.meanings[key]["example"].forEach(example => {
             let textResult = document.createElement("div");
             textResult.innerText = example;
-            textResult.class = "readmore-extension-text-area";
+            textResult.className = "readmore-extension-text-area";
             node.children[0].children[1].children[0].children[1].appendChild(textResult);
         });
 
