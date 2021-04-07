@@ -8,10 +8,8 @@ var globalVar = {
 }
 
 function change_image_src(document) {
-    document.querySelectorAll("img.readmore_dic_extension").forEach((img) => {
+    document.querySelectorAll("img.feature-icon").forEach((img) => {
         img.src = img.src.substr(0, 18) + globalVar.id + img.src.substr(21, );
-        img.style.padding = "5px";
-        // console.log(img.src);
     })
 }
 
@@ -50,7 +48,7 @@ function excecute(click) {
             pofspeech: document.querySelector("body div.dic-section  div.pofspeech"),
             definition: document.querySelector("body div.dic-section div.box div[id='definition']"),
             example: document.querySelector("body div.dic-section div.box div[id='example']"),
-            audio: document.querySelector("body div.dic-wrapper div.dic-section div.feature img[id='volume']"),
+            audio: document.querySelector("body div.dic-wrapper div.dic-section div.feature div[id='volume']"),
             loading: document.getElementById("loading"),
             loadBall: document.querySelectorAll("body span[id='load_ball']"), // returns array
             theme_changer: document.querySelector("body div.dic-section div.feature div#theme-changer input#checkbox"),

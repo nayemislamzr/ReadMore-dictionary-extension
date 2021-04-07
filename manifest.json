@@ -4,8 +4,17 @@
     "version": "0.1",
     "description": "A fucking dickTionary extension with a full of features",
     "browser_action": {
-        "default_icon": "adjust.png",
+        "default_icon": "extension_icon/dictionary-64px.png",
         "default_popup": "popup.html"
+    },
+    "icons": {
+        "16": "extension_icon/dictionary-16px.png",
+        "24": "extension_icon/dictionary-24px.png",
+        "32": "extension_icon/dictionary-32px.png",
+        "64": "extension_icon/dictionary-64px.png",
+        "128": "extension_icon/dictionary-128px.png",
+        "256": "extension_icon/dictionary-256px.png",
+        "512": "extension_icon/dictionary-512px.png"
     },
     "content_scripts": [{
         "matches": ["http://*/*", "https://*/*", "<all_urls>"],

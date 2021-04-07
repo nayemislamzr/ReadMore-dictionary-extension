@@ -386,7 +386,7 @@ function fetch_ahead(majorcomp) {
     globalThis.componants = majorcomp;
     appearance();
 
-    var word = document.getSelection().toString(); // get the selected text
+    var word = document.getSelection().toString().toLowerCase(); // get the selected text
     console.log(word);
     globalVariables.src_word = word;
 
