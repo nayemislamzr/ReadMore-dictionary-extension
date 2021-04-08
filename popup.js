@@ -7,114 +7,90 @@ const componants = {
     option: document.querySelector("div#option"),
 }
 
-function config() {
-    chrome.storage.local.get("status", (res) => {
-        status = res.status;
-        if (status == "true") {
-            chrome.browserAction.setBadgeBackgroundColor({ color: [66, 217, 250, 1] });
-            chrome.browserAction.setBadgeText({ text: "on" });
-            checked_style();
-            componants.checkbox.checked = true;
-        } else {
-            chrome.browserAction.setBadgeBackgroundColor({ color: [247, 14, 122, 1] });
-            chrome.browserAction.setBadgeText({ text: "off" });
-            unchecked_style();
-            componants.checkbox.checked = false;
-        }
+function getStatus() {
+    const status = new Promise((resolve) => {
+        chrome.storage.local.get("status", response => {
+            resolve(response.status);
+        })
     })
+    return status;
 }
 
-const checked_style = function() {
+function config(status) {
+    if (status) {
+        stateON();
+    } else {
+        stateOFF();
+    }
+}
+
+function btnCheckedStyle() {
     componants.header.style.backgroundColor = "var(--header-clicked)";
     for (node of componants.logo) {
         node.style.backgroundImage = "linear-gradient( #4ceadb 50% , var(--header-clicked) 50%)";
     }
 }
 
-const unchecked_style = function() {
+function btnUncheckedStyle() {
     componants.header.style.backgroundColor = "var(--header-not-clicked)"
     for (node of componants.logo) {
         node.style.backgroundImage = "linear-gradient(#f70e7a 50%,#e91a7b 50%)";
     }
 }
 
-class storage {
-
-    static addkey = () => {
-
-    }
-
-    static get = () => {
-        const cachePromise = new Promise((resolve, reject) => {
-            chrome.storage.local.get(key, (response) => {
-                if (!(key in response)) {
-                    reject("not found in cache");
-                } else {
-                    console.log("found");
-                    resolve(response[key]);
-                }
-
-            })
-        });
-        return cachePromise;
-    }
-
-    static update = (key, obj) => {
-        chrome.storage.local.set({ key: obj });
-    }
-
-    static clear = () => {
-
-    }
-
-    static remove = () => {
-
-    }
-
+function stateON() {
+    chrome.browserAction.setBadgeBackgroundColor({ color: [66, 217, 250, 1] });
+    chrome.browserAction.setBadgeText({ text: "on" });
+    btnCheckedStyle();
+    componants.checkbox.checked = true;
 }
 
-async function init() {
-    config();
+function stateOFF() {
+    chrome.browserAction.setBadgeBackgroundColor({ color: [247, 14, 122, 1] });
+    chrome.browserAction.setBadgeText({ text: "off" });
+    btnUncheckedStyle();
+    componants.checkbox.checked = false;
+}
 
-    try {
-
-    } catch (error) {
-        console.error(error);
-    }
-
-    componants.checkbox.addEventListener("change", () => {
-        chrome.storage.local.get("status", (res) => {
-            status = res.status;
-            if (status == "true") {
-                console.log("current status : on");
-                // turning off
-                chrome.browserAction.setBadgeBackgroundColor({ color: [247, 14, 122, 1] });
-                chrome.browserAction.setBadgeText({ text: "off" });
-                unchecked_style();
-                chrome.storage.local.set({ "status": "false" });
-            } else {
-                console.log("current status : off");
-                // turning on
-                chrome.browserAction.setBadgeBackgroundColor({ color: [66, 217, 250, 1] });
-                chrome.browserAction.setBadgeText({ text: "on" });
-                checked_style();
-                chrome.storage.local.set({ "status": "true" });
-            }
-        });
-
+function switchONOff() {
+    componants.checkbox.addEventListener("change", async() => {
+        const status = await getStatus();
+        //if on then turn it to off
+        //if off then turn it to on
+        if (status) {
+            stateOFF();
+            chrome.storage.local.set({ status: false });
+        } else {
+            stateON();
+            chrome.storage.local.set({ status: true });
+        }
     });
+}
 
+function clickEvents() {
     componants.myinfo.addEventListener("click", () => {
         window.open("personal.html", "_blank");
     })
 
     componants.option.addEventListener("click", () => {
-        if (chrome.runtime.openOptionsPage) {
+
+        try {
             chrome.runtime.openOptionsPage();
-        } else {
+        } catch {
             window.open("option.html", "_blank");
         }
     })
+}
+
+
+
+async function init() {
+
+    const status = await getStatus();
+    config(status);
+    switchONOff();
+    clickEvents();
+
 }
 
 document.addEventListener("DOMContentLoaded", init);

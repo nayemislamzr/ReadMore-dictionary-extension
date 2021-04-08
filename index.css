@@ -282,14 +282,14 @@ input:checked+.slider:before {
 .feature-icon {
     height: 20px;
     width: 20px;
+    margin: 5px;
 }
 
 #volume,
 #translator {
     display: inline-block;
-    height: 20px;
-    width: 20px;
-    padding: 5px;
+    height: 30px;
+    width: 30px;
     border-radius: 50%;
     background-color: var(--feature-icon-bg-color);
     transition: background 0.5s linear;
