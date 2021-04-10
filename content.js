@@ -1,68 +1,61 @@
-var globalVar = {
+var resourceVariable = {
     "id": chrome.runtime.id,
     "index": chrome.runtime.getURL("/index.html"),
     "indexjs": chrome.runtime.getURL("/index.js"),
     "indexcss": chrome.runtime.getURL("/index.css"),
     "testjs": chrome.runtime.getURL("/test.js"),
-    "icons": chrome.runtime.getURL("/icons")
+    "icons": chrome.runtime.getURL("/icons"),
+    "extensionBody": document.querySelector("body div#readmore_extension"),
 }
 
-function change_image_src(document) {
-    document.querySelectorAll("img.feature-icon").forEach((img) => {
-        img.src = img.src.substr(0, 18) + globalVar.id + img.src.substr(21, );
-    })
-}
+cursorPosition = (click) => ({ x: click.pageX, y: click.pageY }); // gets proper cursor position
+deletePreviousElement = (element) => { if (element) element.remove() }; // deletes previously box if have any
 
-function excecute(click) {
-    let x = click.pageX;
-    let y = click.pageY;
-
-    const xhr = new XMLHttpRequest();
-
-    //////////////
-    ////remove the prev div if have any
-    /////////////
-
-    if (document.querySelector("body div#readmore_extension")) {
-        document.querySelector("body div#readmore_extension").remove();
-    }
-
+createExtensionFrame = (cursor) => { // html + css dynamically 
     const container = document.createElement("div");
     container.id = "readmore_extension";
     container.setAttribute("style", `position:absolute;
                 z-index:1000;
-                top:${y}px;left:${x}px;
+                top:${cursor.y}px;left:${cursor.x}px;
                 display:grid;
                 z-index: 1000;
                 flex-direction: row;
                 grid-template-columns: minmax(300px,500px)`)
-    xhr.onload = function() {
-        container.innerHTML += xhr.responseText;
-        change_image_src(container);
-        document.body.appendChild(container);
+    return container;
+}
 
-        var majorcomp = {
-            template: document.querySelector("body div.dic-section template.box-container"),
-            section: document.querySelector("body div.dic-section"),
-            box: document.querySelector("body div.dic-section div.box"),
-            pofspeech: document.querySelector("body div.dic-section  div.pofspeech"),
-            definition: document.querySelector("body div.dic-section div.box div[id='definition']"),
-            example: document.querySelector("body div.dic-section div.box div[id='example']"),
-            audio: document.querySelector("body div.dic-wrapper div.dic-section div.feature div[id='volume']"),
-            loading: document.getElementById("loading"),
-            loadBall: document.querySelectorAll("body span[id='load_ball']"), // returns array
-            theme_changer: document.querySelector("body div.dic-section div.feature div#theme-changer input#checkbox"),
-        }
+change_image_src = (document) => {
+    document.querySelectorAll("img.feature-icon").forEach((img) => {
+        img.src = img.src.substr(0, 18) + resourceVariable.id + img.src.substr(21, );
+    })
+}
 
-        fetch_ahead(majorcomp);
+loadExtension = (extensionFrame) => { // loads html in newly created extensionFrame and also request for data fetch
+    const xhr = new XMLHttpRequest();
 
+    xhr.onload = () => {
+        extensionFrame.innerHTML += xhr.responseText;
+        change_image_src(extensionFrame);
+        document.body.appendChild(extensionFrame);
+
+        fetch_ahead(); // fetch ahead in different file
     };
 
-    xhr.open("get", globalVar.index);
+    xhr.open("get", resourceVariable.index);
     xhr.send();
 }
 
-const filtering = function() {
+excecute = (click) => { // this is the executor
+
+    deletePreviousElement(resourceVariable.extensionBody);
+
+    [cursorPosition, createExtensionFrame, loadExtension]
+    .reduce((previousResult, currentProcedure) => currentProcedure(previousResult), click);
+
+}
+
+
+filter = () => { // this works even when a bunch of word is selected but currently just one word is going through
     let words = document.getSelection().toString();
     let word_array = [];
     words.split(" ").forEach((word) => {
@@ -72,29 +65,25 @@ const filtering = function() {
             console.log("not full word");
         }
     })
-    return word_array; // here word array is retured cz may select multiple words
+    return word_array.length;
 }
 
-function filter() {
-    let word_array = filtering();
-    if (word_array.length) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-
-document.body.addEventListener("dblclick", ((click) => {
-
-    chrome.storage.local.get("status", (res) => {
-
-        if (res.status === "true" && filter()) {
-            console.log("excecuting");
-            excecute(click);
-        } else {
-            console.log("status:off or not real word");
-        }
+getStatus = () => { // get extesion Status (on / off)
+    let status = new Promise((reslove) => {
+        chrome.storage.local.get("status", response => {
+            reslove(response);
+        })
     })
+    return status;
+}
 
-}), true);
+document.body.addEventListener("dblclick", (async(click) => {
+
+    if (await getStatus() && filter()) {
+        console.log("excecuting");
+        excecute(click);
+    } else {
+        console.log("status:off or not real word");
+    }
+
+}));

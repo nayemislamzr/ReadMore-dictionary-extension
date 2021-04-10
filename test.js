@@ -1,6 +1,29 @@
-function createDOMelements() {
+function getComponants() {
     return {
-        mydic: {
+        template: document.querySelector("body div.dic-section template.box-container"),
+        section: document.querySelector("body div.dic-section"),
+        box: document.querySelector("body div.dic-section div.box"),
+        pofspeech: document.querySelector("body div.dic-section  div.pofspeech"),
+        definition: document.querySelector("body div.dic-section div.box div[id='definition']"),
+        example: document.querySelector("body div.dic-section div.box div[id='example']"),
+        audio: document.querySelector("body div.dic-wrapper div.dic-section div.feature div[id='volume']"),
+        loading: document.getElementById("loading"),
+        loadBall: document.querySelectorAll("body span[id='load_ball']"), // returns array
+        theme_changer: document.querySelector("body div.dic-section div.feature div#theme-changer input#checkbox"),
+    }
+}
+
+const defaultConfig = {
+    "allow-site": "all",
+    "cache": false,
+    "themes": "light",
+    "cache-value": 0,
+}
+
+
+function createDictionaryElement() {
+    return {
+        wordInDictionary: {
             "meanings": {
 
             },
@@ -10,11 +33,41 @@ function createDOMelements() {
     }
 }
 
-var globalVariables = {
+var fetchVariables = {
     fetched: false,
     error: false,
     audio_src: '',
     src_word: '',
+}
+
+function getSelectedWord() {
+    word = window.getSelection().toString().toLowerCase();
+    fetchVariables.src_word = word;
+    return word;
+};
+
+function getPreference() {
+    const preference = new Promise((resolve) => {
+        chrome.storage.local.get("preference", response => {
+            if ("preference" in response) {
+                resolve(response.preference);
+            } else {
+                resolve({});
+            }
+        })
+    })
+    return preference;
+}
+
+function mergePreference(selectedConfig) { // merges both default and the selected preference
+
+    let preference = {
+        ...defaultConfig,
+        ...selectedConfig
+    }
+
+    // console.log(preference);
+    return preference;
 }
 
 function loading(t) {
@@ -25,7 +78,7 @@ function loading(t) {
     });
 }
 
-async function loading_screen() {
+async function loadingScreen() {
     let t = 0,
         x = 0;
     const w = ((2 * Math.PI) * 0.25);
@@ -42,7 +95,7 @@ async function loading_screen() {
     let i = 0;
     while (i < 60) {
         t %= 4;
-        let a = await loading(t).then((t) => {
+        await loading(t).then((t) => {
             componants.loadBall.forEach((ball, index) => {
                 var res = (25 * Math.sin(w * t + (Math.sinh(theta[index]) / 25) * (Math.PI / 180)));
                 ball.style.top = `${res}px`;
@@ -50,12 +103,15 @@ async function loading_screen() {
         })
         t++;
         i++;
-        if (globalVariables.fetched || globalVariables.error) {
-            globalVariables.fetched = false;
+        if (fetchVariables.fetched || fetchVariables.error) {
+            fetchVariables.fetched = false;
             break;
         }
     }
-    if (i >= 60 || globalVariables.error) {
+    if (i >= 60 || fetchVariables.error) {
+
+        // console.log("problem occured");
+
         let notfound = document.createElement("div");
         notfound.id = "not-found-wrapper";
         let notfoundImage = document.createElement("img");
@@ -67,15 +123,15 @@ async function loading_screen() {
         msg.id = "notfoundmessage";
         notfound.appendChild(msg);
         componants.loading.appendChild(notfound);
-        globalVariables.error = false;
-        globalVariables.fetched = false;
+        fetchVariables.error = false;
+        fetchVariables.fetched = false;
 
-        off_focus();
+        offFocus();
 
     }
 }
 
-function create_new_dictionary() {
+function createNewDictionay() {
     let object = new Promise((resolve) => {
         chrome.storage.local.set({ dictionary: {} });
         resolve();
@@ -83,12 +139,12 @@ function create_new_dictionary() {
     return object;
 }
 
-function get_dictionary() {
+function getDictionary() {
     let object = new Promise((resolve) => {
         chrome.storage.local.get("dictionary", (response) => {
             if (!("dictionary" in response)) {
                 console.log("creating new dictionary")
-                create_new_dictionary()
+                createNewDictionay()
                     .then(() => {
                         console.log("created new dictionary");
                         resolve({});
@@ -105,55 +161,26 @@ function get_dictionary() {
     return object;
 }
 
-function cache_word(selected_text, word_obj) {
-    console.log("getting dictionary");
-    get_dictionary()
-        .then((copy_dictionary) => {
-            // console.log(copy_dictionary);
-            console.log("got dictionary");
-            copy_dictionary[selected_text] = word_obj;
-            chrome.storage.local.set({ dictionary: copy_dictionary });
-        })
-        .catch(() => {
-            console.log("error while setting cache");
-        })
-}
+function formateDictionay(file, wordInDictionary) {
 
-async function fetching(input) {
-    try {
-        const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en_US/${input}`);
-        let file = await response.json();
-        console.log("Data has been fetched successfully");
-        globalVariables.fetched = true;
-        componants.loading.style.display = "none";
-        return file;
-    } catch (error) {
-        console.error("Error occured during data was fetching..try again!!!");
-        globalVariables.error = true;
-        return error;
-    }
-}
-
-function get_items(file, mydic) {
-
-    mydic.word = file[0]["word"];
+    wordInDictionary.word = file[0]["word"];
 
     for (let obj of file) {
         for (let meaning of obj["meanings"]) {
             let partofspeech = meaning['partOfSpeech'];
-            if (!(partofspeech in mydic.meanings)) {
-                mydic.meanings[partofspeech] = new Object({
+            if (!(partofspeech in wordInDictionary.meanings)) {
+                wordInDictionary.meanings[partofspeech] = new Object({
                     "definition": [],
                     "example": [],
                     "synonym": []
                 })
             }
             for (let def of meaning["definitions"]) {
-                if ('definition' in def) mydic.meanings[partofspeech]["definition"].push(def['definition']);
-                if ('example' in def) mydic.meanings[partofspeech]["example"].push(def['example']);
+                if ('definition' in def) wordInDictionary.meanings[partofspeech]["definition"].push(def['definition']);
+                if ('example' in def) wordInDictionary.meanings[partofspeech]["example"].push(def['example']);
                 if ('synonyms' in def) {
                     for (let synonym of def['synonyms']) {
-                        mydic.meanings[partofspeech]['synonym'].push(synonym);
+                        wordInDictionary.meanings[partofspeech]['synonym'].push(synonym);
                     }
                 }
             }
@@ -163,39 +190,23 @@ function get_items(file, mydic) {
     for (let obj of file) {
         for (let phonetic of obj['phonetics']) {
             // console.log(phonetic['text']);
-            mydic['audio'].push(phonetic['audio']);
+            wordInDictionary['audio'].push(phonetic['audio']);
         }
     }
-
-    ///////////////
-    ///////Caching Word
-    //////////////
-
-    cache_word(globalVariables.src_word, mydic);
 }
 
-/////////////
-/////deletes previous showed result
-/////////////
-
-const delete_prev_item = function() {
-    document.querySelectorAll("div.box").forEach((box) => {
-        box.remove();
-    })
-}
-
-function show_items(mydic) {
+function showResult(wordInDictionary) {
 
     /////////////
     ////show word
     ////////////
 
-    document.querySelector("body div.dic-wrapper div.head-sec span[id='src_word']").innerHTML = `<q>${mydic.word}</q>`;
-    globalVariables.audio_src = mydic["audio"][0];
+    document.querySelector("body div.dic-wrapper div.head-sec span[id='src_word']").innerHTML = `<q>${wordInDictionary.word}</q>`;
+    fetchVariables.audio_src = wordInDictionary["audio"][0];
 
     let ul = document.createElement("ul");
 
-    for (let key in mydic.meanings) {
+    for (let key in wordInDictionary.meanings) {
 
         let template = componants.template;
         let node = document.importNode(template.content, true);
@@ -205,25 +216,25 @@ function show_items(mydic) {
         pofspeech_list.innerText = key;
         ul.appendChild(pofspeech_list);
 
-        mydic.meanings[key]["definition"].forEach(def => {
+        wordInDictionary.meanings[key]["definition"].forEach(def => {
             let textResult = document.createElement("div");
             textResult.innerText = def;
             textResult.className = "readmore-extension-text-area";
             node.children[0].children[0].children[0].children[1].appendChild(textResult);
         });
 
-        mydic.meanings[key]["example"].forEach(example => {
+        wordInDictionary.meanings[key]["example"].forEach(example => {
             let textResult = document.createElement("div");
             textResult.innerText = example;
             textResult.className = "readmore-extension-text-area";
             node.children[0].children[1].children[0].children[1].appendChild(textResult);
         });
 
-        if (mydic.meanings[key]["example"].length === 0) {
+        if (wordInDictionary.meanings[key]["example"].length === 0) {
             node.children[0].children[1].children[0].remove();
         }
 
-        if (mydic.meanings[key]["definition"].length === 0) {
+        if (wordInDictionary.meanings[key]["definition"].length === 0) {
             node.children[0].children[0].children[0].remove();
         }
 
@@ -233,7 +244,7 @@ function show_items(mydic) {
     componants.pofspeech.appendChild(ul);
 }
 
-function dom_items() {
+function eventListener() {
     componants.section.children[3].style.display = "block";
 
     let clickedArray = [];
@@ -260,7 +271,7 @@ function dom_items() {
 
 
     componants.audio.addEventListener("click", () => {
-        let audio = new Audio(globalVariables.audio_src);
+        let audio = new Audio(fetchVariables.audio_src);
         audio.play();
     }, false)
 
@@ -285,10 +296,10 @@ function dom_items() {
     ///check for off focus
     //////
 
-    off_focus();
+    offFocus();
 }
 
-function off_focus() {
+function offFocus() {
     document.body.addEventListener("click", ((click) => {
         try {
             if (!(document.querySelector("body div#readmore_extension").contains(click.target))) {
@@ -300,99 +311,133 @@ function off_focus() {
     }))
 }
 
-function remove_error_msg() {
-    if (componants.loading.children.length === 2)
-        componants.loading.children[1].remove();
-    componants.loading.style.display = "block";
-}
+function selectTheme(theme) {
 
-function select_theme() {
-    chrome.storage.local.get("theme", (response) => {
-        switch (response.theme) {
-            case "dark":
-                {
-                    document.documentElement.setAttribute("theme", "redPink-dark");
-                    componants.theme_changer.checked = "true";
-                    break;
-                }
-            case "light":
-                {
-                    document.documentElement.setAttribute("theme", "redPink-light");
-                    componants.theme_changer.checked = "false";
-                    break;
-                }
-            default:
-                {
-                    document.documentElement.setAttribute("theme", "redPink-dark");
-                    componants.theme_changer.checked = "true";
-                }
-        }
-    })
-}
+    // console.log(theme);
 
-function appearance() {
-    remove_error_msg();
-    select_theme();
-}
-
-/////////////
-//////removes loading screen and deletes previous items also
-////////////
-
-function prepare_result() {
-    globalVariables.fetched = true;
-    componants.loading.style.display = "none";
-    delete_prev_item(); // will delete previous shown results if have any
-}
-
-function get_word(word) {
-    get_dictionary()
-        .then(async(copy_dictionary) => {
-            if (word in copy_dictionary) {
-                console.log("found in cache");
-                let mydic = copy_dictionary[word];
-                // console.log(mydic);
-
-                prepare_result();
-
-                show_items(mydic); // showing in html
-                dom_items();
-            } else {
-                console.log("not found in cache");
-                await fetching(word)
-                    .then((response) => {
-                        let file = response;
-
-                        let DOMelements = createDOMelements();
-                        let mydic = DOMelements.mydic;
-
-                        get_items(file, mydic); // getting data from json format
-                        console.log("Data has been parsed Successfully");
-                        delete_prev_item(); // will delete previous shown results if have any
-
-                        show_items(mydic); // showing in html
-                        dom_items();
-                    })
-                    .catch(() => {
-                        console.log("Error occured during parsing data!!! or showing DOM items");
-                        globalVariables.error = true;
-                    })
+    switch (theme) {
+        case "dark":
+            {
+                // console.log("dark");
+                document.documentElement.setAttribute("theme", "redPink-dark");
+                componants.theme_changer.checked = "true";
+                break;
             }
-        })
+        case "light":
+            {
+                // console.log("light")
+                document.documentElement.setAttribute("theme", "redPink-light");
+                componants.theme_changer.checked = "false";
+                break;
+            }
+        default:
+            {
+                // console.log("default")
+                document.documentElement.setAttribute("theme", "redPink-dark");
+                componants.theme_changer.checked = "true";
+            }
+    }
 }
 
-function fetch_ahead(majorcomp) {
+function prepareExtensionScreen() {
+    fetchVariables.fetched = true;
+    componants.loading.style.display = "none";
+}
+
+function doFetch(word) {
+
+    let fetchPromise = new Promise((resolve) => {
+        console.log("fetching");
+        fetch(`https://api.dictionaryapi.dev/api/v2/entries/en_US/${word}`)
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error(`HTTP Status : ${response.status}`);
+                }
+            })
+            .then((jsonFile) => {
+                console.log("fetched");
+                let file = jsonFile;
+                let DOMelements = createDictionaryElement();
+                let wordInDictionary = DOMelements.wordInDictionary;
+                formateDictionay(file, wordInDictionary); // getting data from json format
+                console.log("Data has been parsed Successfully");
+                resolve(wordInDictionary);
+            })
+            .catch((error) => {
+                fetchVariables.error = true;
+                console.error(error); // 404 errors
+            })
+    })
+
+    return fetchPromise;
+
+}
+
+function executeSelectedWord(word) {
+
+    return new Promise((resolve) => {
+        getDictionary()
+            .then(async(copy_dictionary) => {
+                if (word in copy_dictionary) {
+                    console.log("from cache")
+                    var wordInDictionary = copy_dictionary[word];
+                } else {
+                    console.log("from fetch");
+                    var wordInDictionary = await doFetch(word);
+                    if (cacheStatus) {
+                        cacheWord(word, wordInDictionary);
+                    }
+                }
+                resolve(wordInDictionary);
+            })
+    })
+
+}
+
+function excecuteExtension(wordInDictionary) {
+
+    if (wordInDictionary != "undefined") {
+        prepareExtensionScreen();
+        showResult(wordInDictionary); // showing in html
+        eventListener();
+    } else {
+        prepareExtensionScreen();
+        fetchVariables.error = true;
+    }
+
+}
+
+function cacheWord(selected_text, word_obj) {
+    // console.log("Caching");
+    getDictionary()
+        .then((copy_dictionary) => {
+            // console.log(copy_dictionary);
+            // console.log("got dictionary");
+            copy_dictionary[selected_text] = word_obj;
+            chrome.storage.local.set({ dictionary: copy_dictionary });
+        })
+        .catch(() => {
+            console.log("error while setting cache");
+        })
+};
+
+
+async function fetch_ahead() {
     console.log("starting fetching data");
-    globalThis.componants = majorcomp;
-    appearance();
+    componants = getComponants();
 
-    var word = document.getSelection().toString().toLowerCase(); // get the selected text
-    console.log(word);
-    globalVariables.src_word = word;
+    var mergedPreference = getPreference().then(mergePreference);
 
-    loading_screen(); // load screen
+    mergedPreference.then(preference => selectTheme(preference.themes));
+    mergedPreference.then((preference) => { globalThis.cacheStatus = preference.cache })
 
-    get_word(globalVariables.src_word);
+    var selectedWord = getSelectedWord(); // get the selected text
+    loadingScreen(); // load screen
+    var wordInDictionary = await executeSelectedWord(selectedWord);
+
+    excecuteExtension(wordInDictionary);
 
     console.log("Executed Successfully...");
 };
