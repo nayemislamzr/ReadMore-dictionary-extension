@@ -9,7 +9,7 @@ var resourceVariable = {
 }
 
 cursorPosition = (click) => ({ x: click.pageX, y: click.pageY }); // gets proper cursor position
-deletePreviousElement = (element) => { if (element) element.remove() }; // deletes previously box if have any
+deletePreviousElement = (element) => { if (element != null) { element.remove() } }; // deletes previously box if have any
 
 createExtensionFrame = (cursor) => { // html + css dynamically 
     const container = document.createElement("div");
@@ -24,6 +24,21 @@ createExtensionFrame = (cursor) => { // html + css dynamically
     return container;
 }
 
+const fonts = `<style>
+@font-face {
+    src: url('chrome-extension://${resourceVariable.id}/fonts/Montserrat-Light.ttf');
+    font-family: Montserrat-Light;
+}
+@font-face {
+    src: url('chrome-extension://${resourceVariable.id}/fonts/Ubuntu-Regular.ttf');
+    font-family: Ubuntu-Regular;
+}
+@font-face {
+    src: url('chrome-extension://${resourceVariable.id}/fonts/NotoSans-Regular.ttf');
+    font-family: NotoSans-Regular;
+}
+                </style>`
+
 change_image_src = (document) => {
     document.querySelectorAll("img.feature-icon").forEach((img) => {
         img.src = img.src.substr(0, 18) + resourceVariable.id + img.src.substr(21, );
@@ -34,6 +49,7 @@ loadExtension = (extensionFrame) => { // loads html in newly created extensionFr
     const xhr = new XMLHttpRequest();
 
     xhr.onload = () => {
+        extensionFrame.innerHTML += fonts;
         extensionFrame.innerHTML += xhr.responseText;
         change_image_src(extensionFrame);
         document.body.appendChild(extensionFrame);
@@ -71,7 +87,7 @@ filter = () => { // this works even when a bunch of word is selected but current
 getStatus = () => { // get extesion Status (on / off)
     let status = new Promise((reslove) => {
         chrome.storage.local.get("status", response => {
-            reslove(response);
+            reslove(response.status);
         })
     })
     return status;
@@ -79,7 +95,9 @@ getStatus = () => { // get extesion Status (on / off)
 
 document.body.addEventListener("dblclick", (async(click) => {
 
-    if (await getStatus() && filter()) {
+    let status = await getStatus();
+
+    if (status === true && filter()) {
         console.log("excecuting");
         excecute(click);
     } else {

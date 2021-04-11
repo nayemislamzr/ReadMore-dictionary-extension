@@ -28,6 +28,39 @@
     box-shadow: 0px 0px 5px 0px black;
 }
 
+#background {
+    background-image: white;
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+}
+
+#background::before {
+    content: "";
+    border-radius: 40px;
+    height: 30px;
+    width: 450px;
+    padding: 10px;
+    background: rgba(247, 35, 134, 0.4);
+    box-shadow: 30px 30px 2px 2px rgba(206, 204, 204, 0.6);
+    position: fixed;
+    bottom: 150px;
+    left: -270px;
+}
+
+#background::after {
+    content: "";
+    border-radius: 40px;
+    height: 30px;
+    width: 450px;
+    padding: 10px;
+    background: rgba(247, 35, 134, 0.4);
+    box-shadow: 30px 30px 2px 2px rgba(206, 204, 204, 0.6);
+    position: fixed;
+    bottom: 53px;
+    left: -180px;
+}
+
 .saved {
     display: none;
     position: fixed;
@@ -186,6 +219,10 @@ input[type="radio"]:hover {
     transition: .4s;
 }
 
+.slider:hover {
+    box-shadow: 0px 0px 2px 2px rgb(246, 13, 121);
+}
+
 .slider::before {
     position: absolute;
     content: "";
@@ -255,6 +292,10 @@ input[type="range"] {
     box-shadow: 0px 0px 1px 1px grey;
 }
 
+input[type="range"]:hover {
+    box-shadow: 0px 0px 2px 2px rgb(246, 13, 121);
+}
+
 input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 20px;
@@ -275,6 +316,14 @@ input[type="range"]::-moz-range-thumb {
     border-radius: 50%;
 }
 
+input[type="range"]::-webkit-slider-thumb:hover {
+    box-shadow: 0px 0px 2px 2px rgb(246, 13, 121);
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+    box-shadow: 0px 0px 2px 2px rgb(246, 13, 121);
+}
+
 input[type="text"] {
     height: 25px;
     border: 2px solid white;
@@ -290,6 +339,18 @@ input[type="text"] {
     font-family: Montserrat-Regular;
 }
 
+input[type="text"]:focus {
+    box-shadow: 0px 0px 2px 2px rgb(246, 13, 121);
+}
+
+input[type="text"]:hover {
+    box-shadow: 0px 0px 2px 2px grey;
+}
+
+input[type="text"]:focus:hover {
+    box-shadow: 0px 0px 2px 2px rgb(246, 13, 121);
+}
+
 button {
     background-color: rgb(246, 13, 121);
     padding: 7px;
@@ -301,6 +362,10 @@ button {
     border: 2px solid white;
     border-radius: 9px;
     cursor: pointer;
+}
+
+button:hover {
+    box-shadow: 0px 0px 2px 2px rgb(246, 13, 121);
 }
 
 select {
@@ -316,6 +381,10 @@ select {
     padding-bottom: 3px;
     font-family: Montserrat-Regular;
     cursor: pointer;
+}
+
+select:hover {
+    box-shadow: 0px 0px 2px 2px rgb(246, 13, 121);
 }
 
 h3 {

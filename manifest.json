@@ -18,7 +18,7 @@
     },
     "content_scripts": [{
         "matches": ["http://*/*", "https://*/*", "<all_urls>"],
-        "js": ["jquery.js", "test.js", "content.js"],
+        "js": ["test.js", "content.js"],
         "css": ["index.css"]
     }],
     "background": {
@@ -32,7 +32,10 @@
         "icons/black/404-error.svg",
         "icons/black/volume-up-solid.svg",
         "icons/black/language-solid.svg",
-        "icons/black/angle-double-down-solid.svg"
+        "icons/black/angle-double-down-solid.svg",
+        "fonts/Montserrat-Light.ttf",
+        "fonts/Ubuntu-Regular.ttf",
+        "fonts/NotoSans-Regular.ttf"
     ],
     "permissions": [
         "activeTab",

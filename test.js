@@ -279,17 +279,24 @@ function eventListener() {
     /////theme changer
     ////////
 
-    let themeStatus = componants.theme_changer.checked;
 
     componants.theme_changer.addEventListener("change", () => {
-        themeStatus = !themeStatus;
+
+        let themeStatus = componants.theme_changer.checked;
+
         if (themeStatus) {
-            chrome.storage.local.set({ "theme": "dark" });
             document.documentElement.setAttribute("theme", "redPink-dark");
+            var currentTheme = "dark";
         } else {
-            chrome.storage.local.set({ "theme": "light" });
             document.documentElement.setAttribute("theme", "redPink-light");
+            var currentTheme = "light";
         }
+
+        getPreference()
+            .then((oldPreference) => {
+                oldPreference.themes = currentTheme;
+                chrome.storage.local.set({ preference: oldPreference });
+            });
     }, false)
 
     ///////
@@ -320,21 +327,21 @@ function selectTheme(theme) {
             {
                 // console.log("dark");
                 document.documentElement.setAttribute("theme", "redPink-dark");
-                componants.theme_changer.checked = "true";
+                componants.theme_changer.checked = true;
                 break;
             }
         case "light":
             {
                 // console.log("light")
                 document.documentElement.setAttribute("theme", "redPink-light");
-                componants.theme_changer.checked = "false";
+                componants.theme_changer.checked = false;
                 break;
             }
         default:
             {
                 // console.log("default")
                 document.documentElement.setAttribute("theme", "redPink-dark");
-                componants.theme_changer.checked = "true";
+                componants.theme_changer.checked = true;
             }
     }
 }
