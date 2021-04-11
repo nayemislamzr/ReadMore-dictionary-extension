@@ -45,6 +45,7 @@ change_image_src = (document) => {
     })
 }
 
+
 loadExtension = (extensionFrame) => { // loads html in newly created extensionFrame and also request for data fetch
     const xhr = new XMLHttpRequest();
 
