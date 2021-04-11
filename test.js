@@ -78,6 +78,22 @@ function loading(t) {
     });
 }
 
+function showErrorMessage() {
+    let notfound = document.createElement("div");
+    notfound.id = "not-found-wrapper";
+    let notfoundImage = document.createElement("img");
+    notfoundImage.src = chrome.runtime.getURL("/icons/black/404-error.svg");
+    notfoundImage.id = "notfound";
+    notfound.appendChild(notfoundImage);
+    let msg = document.createElement("div");
+    msg.innerText = "Not Found";
+    msg.id = "notfoundmessage";
+    notfound.appendChild(msg);
+    componants.loading.appendChild(notfound);
+    fetchVariables.error = false;
+    fetchVariables.fetched = false;
+}
+
 async function loadingScreen() {
     let t = 0,
         x = 0;
@@ -112,22 +128,9 @@ async function loadingScreen() {
 
         // console.log("problem occured");
 
-        let notfound = document.createElement("div");
-        notfound.id = "not-found-wrapper";
-        let notfoundImage = document.createElement("img");
-        notfoundImage.src = chrome.runtime.getURL("/icons/black/404-error.svg");
-        notfoundImage.id = "notfound";
-        notfound.appendChild(notfoundImage);
-        let msg = document.createElement("div");
-        msg.innerText = "Not Found";
-        msg.id = "notfoundmessage";
-        notfound.appendChild(msg);
-        componants.loading.appendChild(notfound);
-        fetchVariables.error = false;
-        fetchVariables.fetched = false;
+        showErrorMessage();
 
         offFocus();
-
     }
 }
 

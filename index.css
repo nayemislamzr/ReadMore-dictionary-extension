@@ -154,6 +154,7 @@
 }
 
 #loading #notfoundmessage {
+    font-family: Montserrat-Light;
     text-align: center;
     position: relative;
     color: black;
