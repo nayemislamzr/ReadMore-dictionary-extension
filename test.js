@@ -7,8 +7,7 @@ function getComponants() {
         definition: document.querySelector("body div.dic-section div.box div[id='definition']"),
         example: document.querySelector("body div.dic-section div.box div[id='example']"),
         audio: document.querySelector("body div.dic-wrapper div.dic-section div.feature div[id='volume']"),
-        loading: document.getElementById("loading"),
-        loadBall: document.querySelectorAll("body span[id='load_ball']"), // returns array
+        loadingSection: document.querySelector("body div.loadingWrapper"),
         theme_changer: document.querySelector("body div.dic-section div.feature div#theme-changer input#checkbox"),
     }
 }
@@ -73,12 +72,14 @@ function mergePreference(selectedConfig) { // merges both default and the select
 function loading(t) {
     return new Promise((resolve) => {
         setTimeout(() => {
-            resolve(t);
+            resolve(++t);
         }, 100);
     });
 }
 
 function showErrorMessage() {
+    let errorScreenWrapper = document.createElement("div");
+    errorScreenWrapper.id = "errorWrapper";
     let notfound = document.createElement("div");
     notfound.id = "not-found-wrapper";
     let notfoundImage = document.createElement("img");
@@ -89,42 +90,29 @@ function showErrorMessage() {
     msg.innerText = "Not Found";
     msg.id = "notfoundmessage";
     notfound.appendChild(msg);
-    componants.loading.appendChild(notfound);
+    errorScreenWrapper.appendChild(notfound);
+    componants.loadingSection.appendChild(errorScreenWrapper);
     fetchVariables.error = false;
     fetchVariables.fetched = false;
 }
 
 async function loadingScreen() {
-    let t = 0,
-        x = 0;
-    const w = ((2 * Math.PI) * 0.25);
-    var theta = [];
 
-    componants.loadBall.forEach((ball) => {
-        x %= 4;
-        let th = (25 * Math.sin(w * x));
-        if (th > -1)
-            theta.push(Math.ceil(th));
-        else theta.push(Math.floor(th));
-        x++;
-    })
-    let i = 0;
-    while (i < 60) {
-        t %= 4;
-        await loading(t).then((t) => {
-            componants.loadBall.forEach((ball, index) => {
-                var res = (25 * Math.sin(w * t + (Math.sinh(theta[index]) / 25) * (Math.PI / 180)));
-                ball.style.top = `${res}px`;
-            })
+    const timeOut = 60;
+    var timeSpent = 0;
+
+    while (timeSpent < timeOut) {
+
+        await loading(timeSpent).then((t) => {
+            timeSpent = t;
         })
-        t++;
-        i++;
+
         if (fetchVariables.fetched || fetchVariables.error) {
             fetchVariables.fetched = false;
             break;
         }
     }
-    if (i >= 60 || fetchVariables.error) {
+    if (timeSpent >= 60 || fetchVariables.error) {
 
         // console.log("problem occured");
 
@@ -213,32 +201,37 @@ function showResult(wordInDictionary) {
 
         let template = componants.template;
         let node = document.importNode(template.content, true);
+        const definitions = wordInDictionary.meanings[key]["definition"];
+        const examples = wordInDictionary.meanings[key]["example"];
+
+        const definitionSection = node.children[0].children[0].children[0].children[1];
+        const exampleSection = node.children[0].children[1].children[0].children[1];
 
         node["children"][0].id = key.toLowerCase();
         let pofspeech_list = document.createElement("li");
         pofspeech_list.innerText = key;
         ul.appendChild(pofspeech_list);
 
-        wordInDictionary.meanings[key]["definition"].forEach(def => {
+        definitions.forEach(def => {
             let textResult = document.createElement("div");
             textResult.innerText = def;
             textResult.className = "readmore-extension-text-area";
-            node.children[0].children[0].children[0].children[1].appendChild(textResult);
+            definitionSection.appendChild(textResult);
         });
 
-        wordInDictionary.meanings[key]["example"].forEach(example => {
+        examples.forEach(example => {
             let textResult = document.createElement("div");
             textResult.innerText = example;
             textResult.className = "readmore-extension-text-area";
-            node.children[0].children[1].children[0].children[1].appendChild(textResult);
+            exampleSection.appendChild(textResult);
         });
 
-        if (wordInDictionary.meanings[key]["example"].length === 0) {
-            node.children[0].children[1].children[0].remove();
+        if (examples.length === 0) {
+            node.children[0].children[1].children[0].remove(); // removing example box
         }
 
-        if (wordInDictionary.meanings[key]["definition"].length === 0) {
-            node.children[0].children[0].children[0].remove();
+        if (definitions.length === 0) {
+            node.children[0].children[0].children[0].remove(); // removing definition box
         }
 
         componants.section.appendChild(node);
@@ -351,7 +344,8 @@ function selectTheme(theme) {
 
 function prepareExtensionScreen() {
     fetchVariables.fetched = true;
-    componants.loading.style.display = "none";
+    componants.loadingSection.style.display = "none";
+    componants.section.style.display = "block";
 }
 
 function doFetch(word) {
@@ -433,7 +427,6 @@ function cacheWord(selected_text, word_obj) {
         })
 };
 
-
 async function fetch_ahead() {
     console.log("starting fetching data");
     componants = getComponants();
@@ -445,6 +438,7 @@ async function fetch_ahead() {
 
     var selectedWord = getSelectedWord(); // get the selected text
     loadingScreen(); // load screen
+
     var wordInDictionary = await executeSelectedWord(selectedWord);
 
     excecuteExtension(wordInDictionary);

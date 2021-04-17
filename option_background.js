@@ -21,8 +21,10 @@ function get_pref() {
                 // console.log("preference achieved");
                 resolve(pref);
             } else {
-                let new_pref = create_new_pref();
-                resolve(new_pref);
+                create_new_pref()
+                    .then((pref) => {
+                        resolve(pref);
+                    });
             }
 
         })
@@ -31,14 +33,20 @@ function get_pref() {
 }
 
 function create_new_pref() {
-    chrome.storage.local.set({ "preference": {} });
-    let new_pref = {
-        "allow-site": "all",
-        "cache": false,
-        "themes": "light",
-        "cache-value": 0,
-    };
-    return new_pref;
+
+    return new Promise((resolve) => {
+        let new_pref = {
+            "allow-site": "all",
+            "cache": false,
+            "themes": "light",
+            "cache-value": 0,
+        };
+
+        chrome.storage.local.set({ "preference": new_pref });
+
+        resolve(new_pref);
+    })
+
 }
 
 function __on__off__option__select(id, name) {
