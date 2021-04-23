@@ -18,6 +18,7 @@
     },
     "content_scripts": [{
         "matches": ["http://*/*", "https://*/*", "<all_urls>"],
+        "exclude_globs": [],
         "js": ["test.js", "content.js"],
         "css": ["index.css"]
     }],
@@ -27,17 +28,8 @@
     "options_page": "option.html",
     "web_accessible_resources": ["index.html",
         "index.css",
-        "icons/black/next.svg",
-        "icons/black/right.svg",
-        "icons/black/right-arrow-pink.svg",
-        "icons/black/down-arrow.svg",
-        "icons/black/404-error.svg",
-        "icons/black/volume-up-solid.svg",
-        "icons/black/language-solid.svg",
-        "icons/black/angle-double-down-solid.svg",
-        "fonts/Montserrat-Light.ttf",
-        "fonts/Ubuntu-Regular.ttf",
-        "fonts/NotoSans-Regular.ttf"
+        "icons/black/*",
+        "fonts/*"
     ],
     "permissions": [
         "activeTab",

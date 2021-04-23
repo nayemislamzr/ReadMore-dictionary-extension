@@ -18,9 +18,8 @@ createExtensionFrame = (cursor) => { // html + css dynamically
                 z-index:1000;
                 top:${cursor.y}px;left:${cursor.x}px;
                 display:grid;
-                z-index: 1000;
                 flex-direction: row;
-                grid-template-columns: minmax(300px,500px)`)
+                grid-template-columns: minmax(350px,500px)`)
     return container;
 }
 

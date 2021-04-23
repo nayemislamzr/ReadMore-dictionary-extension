@@ -12,6 +12,7 @@
     --theme-bg-hover-color: rgb(164, 166, 170);
     --theme-font-color: black;
     --text-font-color: grey;
+    --loading-section-bg-color: black;
 }
 
 [theme="dark-theme"] {
@@ -61,6 +62,211 @@
     color: var(--theme-font-color);
 }
 
+#loading-text-box {
+    height: -moz-fit-content;
+    border-radius: 20px;
+    border: 1px solid grey;
+    margin-top: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+#loading-text-box-header {
+    height: 26px;
+    width: 90px;
+    background-color: grey;
+    border-radius: 20px;
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#loading-text-box-text-wrapper {
+    display: block;
+}
+
+#loading-text-box-text {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px;
+}
+
+.loading-text-box-text-innertext {
+    height: 10px;
+    width: 41px;
+    background-color: grey;
+    border-radius: 10px;
+}
+
+.loading-feature-icon {
+    display: block;
+    height: 30px;
+    width: 30px;
+    background-color: grey;
+    border-radius: 50%;
+}
+
+.loading-feature {
+    display: flex;
+    justify-content: space-between;
+    width: 140px;
+}
+
+#loading-feature-theme-changer {
+    display: block;
+    background-color: grey;
+    height: 30px;
+    width: 67px;
+    border-radius: 20px;
+}
+
+.loading-word {
+    display: flex;
+    width: 166px;
+    justify-content: space-around;
+}
+
+.loading-head-sec {
+    color: white;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--main-bg-color);
+    font-family: Ubuntu-Regular;
+}
+
+.dic-head {
+    background-color: var(--header-footer-bg-color);
+    font-size: 14px;
+    letter-spacing: 1.2pt;
+    padding: 2px;
+    padding-left: 15px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    color: var(--header-footer-font-color);
+    border-bottom: 1.5px solid var(--main-bg-color);
+    display: none;
+}
+
+.dic-loading-section {
+    background-color: var(--main-bg-color);
+    position: relative;
+    top: 0px;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    min-height: 360px;
+    max-height: 500px;
+    overflow-y: hidden;
+    min-height: 190px;
+}
+
+.dic-loading-section .box {
+    /* background-color: white; */
+    min-height: max-content;
+    max-height: 182px;
+    width: -moz-available;
+    width: -webkit-fill-available;
+    padding-left: 5px;
+    padding-right: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    position: absolute;
+    top: 100px;
+    display: none;
+    text-align: left;
+    font-family: NotoSans-Regular;
+}
+
+.loading-pofspeech {
+    position: sticky;
+    box-shadow: 1px 1px 1px grey;
+    z-index: 2;
+    top: 0px;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-flow: row;
+    text-transform: capitalize;
+    font-family: Ubuntu-Regular;
+    background-color: var(--text-bg-color);
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 10px;
+}
+
+.loading-pofspeech ul {
+    margin: 0px;
+    padding: 0px;
+    display: flex;
+    flex-direction: row;
+    flex-flow: row;
+    justify-content: left;
+}
+
+.loading-pofspeech ul li {
+    display: block;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 3px;
+    padding-bottom: 4px;
+    margin: 0px;
+    margin-right: 4px;
+    border-radius: 18px;
+    width: max-content;
+    color: var(--theme-font-color);
+    font-weight: normal;
+    font-size: 15px;
+    text-align: center;
+    border: 2px solid transparent;
+    background-color: grey;
+    height: 20px;
+    width: 80px;
+}
+
+#loading-text-box>div:nth-child(2)>div:nth-child(1)>div:nth-child(1) {
+    width: 61px;
+}
+
+#loading-text-box>div:nth-child(2)>div:nth-child(1)>div:nth-child(4) {
+    width: 30px;
+}
+
+#loading-text-box>div:nth-child(2)>div:nth-child(1)>div:nth-child(5) {
+    width: 51px;
+}
+
+#loading-text-box>div:nth-child(2)>div:nth-child(1)>div:nth-child(6) {
+    width: 31px;
+}
+
+#loading-text-box>div:nth-child(2)>div:nth-child(1)>div:nth-child(3) {
+    width: 49px;
+}
+
+#loading-text-box>div:nth-child(2)>div:nth-child(1)>div:nth-child(10) {
+    width: 49px;
+}
+
+#loading-text-box>div:nth-child(3)>div:nth-child(1)>div:nth-child(5) {
+    width: 71px;
+}
+
+#loading-text-box>div:nth-child(3)>div:nth-child(1)>div:nth-child(7) {
+    width: 30px;
+}
+
+#loading-text-box>div:nth-child(3)>div:nth-child(1)>div:nth-child(9) {
+    width: 35px;
+}
+
+div.loading-text-box-text-innertext:nth-child(11) {
+    width: 30px;
+}
+
 #cross {
     position: absolute;
     top: 3px;
@@ -74,7 +280,7 @@
     box-shadow: 0px 0px 1px 1px gray;
 }
 
-#loading {
+#errorWrapper {
     position: absolute;
     height: 200px;
     display: flex;
@@ -86,56 +292,7 @@
     z-index: 3;
 }
 
-#load {
-    position: absolute;
-    display: flex;
-    height: 200px;
-    width: -moz-available;
-    width: -webkit-fill-available;
-    flex-direction: row;
-    justify-content: center;
-}
-
-#load_ball {
-    height: 15px;
-    width: 15px;
-    margin: 10px;
-    align-self: center;
-    background-color: var(--ball-bg-color);
-    border-radius: 50%;
-    animation: ballanimation 5s liner;
-}
-
-#load_ball:nth-child(even) {
-    background-color: rgb(145, 142, 142);
-}
-
-#load_ball:nth-child(1) {
-    position: relative;
-    top: 0px;
-}
-
-#load_ball:nth-child(2) {
-    position: relative;
-    top: 25px;
-}
-
-#load_ball:nth-child(3) {
-    position: relative;
-    top: 0px;
-}
-
-#load_ball:nth-child(4) {
-    position: relative;
-    top: -25px;
-}
-
-#load_ball:nth-child(5) {
-    position: relative;
-    top: 0px;
-}
-
-#loading #not-found-wrapper {
+#errorWrapper #not-found-wrapper {
     position: absolute;
     z-index: 10;
     background-color: #dd2a2a;
@@ -147,13 +304,13 @@
     justify-content: center;
 }
 
-#loading #notfound {
+#errorWrapper #notfound {
     width: 70px;
     height: 70px;
     align-self: center;
 }
 
-#loading #notfoundmessage {
+#errorWrapper #notfoundmessage {
     font-family: Montserrat-Light;
     text-align: center;
     position: relative;
@@ -232,7 +389,7 @@
     content: "Word";
     padding: 10px;
     font-size: 18px;
-    font-family: Open Sans;
+    font-family: Ubuntu-Regular;
 }
 
 
@@ -328,6 +485,7 @@ input:checked+.slider:before {
 }
 
 .dic-section {
+    display: none;
     background-color: var(--section-bg-color);
     position: relative;
     overflow-y: scroll;
