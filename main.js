@@ -51,7 +51,7 @@ function getPreference() {
             if ("preference" in response) {
                 resolve(response.preference);
             } else {
-                resolve({});
+                resolve(defaultConfig);
             }
         })
     })
@@ -244,7 +244,6 @@ function eventListener() {
     componants.section.children[3].style.display = "block";
 
     let clickedArray = [];
-    //  clickedArray.push(componants.pofspeech.children[0].children[0].innerText.toLowerCase());
     clickedArray.push(componants.pofspeech.children[0].children[0]);
 
     componants.pofspeech.children[0].addEventListener("click", (e) => {
@@ -293,7 +292,7 @@ function eventListener() {
                 oldPreference.themes = currentTheme;
                 chrome.storage.local.set({ preference: oldPreference });
             });
-    }, false)
+    })
 
     ///////
     ///check for off focus
@@ -312,6 +311,7 @@ function offFocus() {
             // as clicked item can be empty(none)   
         }
     }))
+
 }
 
 function selectTheme(theme) {
@@ -371,7 +371,7 @@ function doFetch(word) {
             })
             .catch((error) => {
                 fetchVariables.error = true;
-                console.error(error); // 404 errors
+                console.log(error); // 404 errors
             })
     })
 

@@ -19,7 +19,7 @@
     "content_scripts": [{
         "matches": ["http://*/*", "https://*/*", "<all_urls>"],
         "exclude_globs": [],
-        "js": ["test.js", "content.js"],
+        "js": ["main.js", "content.js"],
         "css": ["index.css"]
     }],
     "background": {

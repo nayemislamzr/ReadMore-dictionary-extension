@@ -63,7 +63,7 @@ loadExtension = (extensionFrame) => { // loads html in newly created extensionFr
 
 excecute = (click) => { // this is the executor
 
-    deletePreviousElement(resourceVariable.extensionBody);
+    deletePreviousElement(document.querySelector("body div#readmore_extension"));
 
     [cursorPosition, createExtensionFrame, loadExtension]
     .reduce((previousResult, currentProcedure) => currentProcedure(previousResult), click);
