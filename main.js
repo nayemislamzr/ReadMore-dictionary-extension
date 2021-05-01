@@ -161,14 +161,19 @@ function formateDictionay(file, wordInDictionary) {
             let partofspeech = meaning['partOfSpeech'];
             if (!(partofspeech in wordInDictionary.meanings)) {
                 wordInDictionary.meanings[partofspeech] = new Object({
-                    "definition": [],
-                    "example": [],
+                    "definitionWithExample": [],
                     "synonym": []
                 })
             }
             for (let def of meaning["definitions"]) {
-                if ('definition' in def) wordInDictionary.meanings[partofspeech]["definition"].push(def['definition']);
-                if ('example' in def) wordInDictionary.meanings[partofspeech]["example"].push(def['example']);
+                let defWithexample = {};
+                if ('definition' in def)
+                    defWithexample["definition"] = def["definition"];
+                if ('example' in def)
+                    defWithexample["example"] = def["example"];
+
+                wordInDictionary.meanings[partofspeech]["definitionWithExample"].push(defWithexample);
+
                 if ('synonyms' in def) {
                     for (let synonym of def['synonyms']) {
                         wordInDictionary.meanings[partofspeech]['synonym'].push(synonym);
@@ -201,38 +206,57 @@ function showResult(wordInDictionary) {
 
         let template = componants.template;
         let node = document.importNode(template.content, true);
-        const definitions = wordInDictionary.meanings[key]["definition"];
-        const examples = wordInDictionary.meanings[key]["example"];
+        const definitionWithExample = wordInDictionary.meanings[key]["definitionWithExample"];
+        const synonyms = wordInDictionary.meanings[key]["synonym"];
 
         const definitionSection = node.children[0].children[0].children[0].children[1];
-        const exampleSection = node.children[0].children[1].children[0].children[1];
+        const synonymSection = node.children[0].children[1].children[0].children[1];
 
         node["children"][0].id = key.toLowerCase();
         let pofspeech_list = document.createElement("li");
         pofspeech_list.innerText = key;
         ul.appendChild(pofspeech_list);
 
-        definitions.forEach(def => {
-            let textResult = document.createElement("div");
-            textResult.innerText = def;
-            textResult.className = "readmore-extension-text-area";
-            definitionSection.appendChild(textResult);
+        definitionWithExample.forEach(defWithexample => {
+            let definition = defWithexample["definition"];
+            let example = defWithexample["example"] === undefined ? "Sorry , no example has been found" : defWithexample["example"];
+
+            let wrapper = document.createElement("div");
+            wrapper.classList.add("defwithexample-wrapper");
+
+            let result = `
+                        <ul id="parent">
+                            <li id="definition">
+                                <div>
+                                    ${definition}
+                                </div>
+                            </li>
+                            <li id="example">
+                                <div>
+                                    ${example}
+                                </div>
+                            </li>
+                        </ul>
+            `
+
+            wrapper.innerHTML = result;
+            definitionSection.appendChild(wrapper);
         });
 
-        examples.forEach(example => {
-            let textResult = document.createElement("div");
-            textResult.innerText = example;
-            textResult.className = "readmore-extension-text-area";
-            exampleSection.appendChild(textResult);
+        synonyms.forEach(synonym => {
+            let para = document.createElement("p");
+            para.classList.add("example-list");
+            para.textContent = synonym;
+            synonymSection.appendChild(para);
         });
 
-        if (examples.length === 0) {
+        if (synonyms.length === 0) {
             node.children[0].children[1].children[0].remove(); // removing example box
         }
 
-        if (definitions.length === 0) {
-            node.children[0].children[0].children[0].remove(); // removing definition box
-        }
+        // if (definitions.length === 0) {
+        //     node.children[0].children[0].children[0].remove(); // removing definition box
+        // }
 
         componants.section.appendChild(node);
     }

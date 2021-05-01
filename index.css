@@ -500,7 +500,7 @@ input:checked+.slider:before {
     width: max-content;
     background-color: var(--theme-bg-color);
     color: var(--theme-font-color);
-    font-weight: lighter;
+    font-weight: normal;
     font-size: 15px;
     text-align: center;
     border: 2px solid transparent;
@@ -539,31 +539,117 @@ input:checked+.slider:before {
 
 .dic-section .box .dic-inner-sec .frame .object {
     position: relative;
+    left: 0px;
+    padding: 0px;
+    margin: 10px;
     color: var(--text-font-color);
-    padding: 10px;
     display: block;
     min-height: max-content;
-    max-height: 48px;
+    max-height: max-content;
     overflow: hidden;
 }
 
 .dic-section .box .dic-inner-sec .frame .object::before {
-    content: "More";
-    color: var(--text-font-color);
-    text-align: center;
-    justify-self: center;
-    align-self: center;
-    width: 25px;
+    content: "";
+    width: 15px;
     height: 15px;
-    border-radius: 10px;
-    display: flex;
+    border-radius: 50%;
+    display: block;
+    z-index: 4;
     position: absolute;
-    font-size: 10px;
-    right: 5px;
     bottom: 5px;
-    background-color: var(--theme-bg-color);
+    background-color: var(--section-bg-color);
+    background-image: url("icons/black/down-arrow.svg");
+    background-repeat: no-repeat;
     padding: 2px;
-    border: 1px solid var(--main-bg-color);
+    border: 2px solid var(--theme-bg-color);
+    right: 3px;
+    background-size: 14px 15px;
+    background-position: center;
+}
+
+.dic-section .box .dic-inner-sec .frame .object .defwithexample-wrapper {
+    position: relative;
+    margin-bottom: 8px;
+}
+
+li#definition {
+    position: relative;
+    list-style: none;
+    margin-left: 32px;
+}
+
+li#example::before {
+    content: "";
+    bottom: -14px;
+    display: block;
+    width: 16px;
+    border-bottom: 2px solid var(--theme-bg-color);
+    position: relative;
+    left: -23px;
+    top: 12px;
+}
+
+li#example {
+    list-style: none;
+    margin-left: 46px;
+    margin-top: -1px;
+}
+
+ul.parent {
+    padding: 0;
+    margin: 0;
+}
+
+li#example>div:nth-child(1) {
+    border: 2px solid var(--theme-bg-color);
+    background-color: var(--section-bg-color);
+    font-size: 13px;
+    border-radius: 18px;
+    position: relative;
+    left: -9px;
+    padding: 7px;
+}
+
+li#definition>div:nth-child(1) {
+    position: relative;
+    border: 2px solid var(--theme-bg-color);
+    background-color: var(--section-bg-color);
+    font-size: 13px;
+    left: -5px;
+    padding: 4px;
+    border-radius: 8px;
+    margin-bottom: 5px;
+}
+
+li#definition::before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 20px;
+    border-top: 2px solid var(--theme-bg-color);
+    border-left: 2px solid var(--theme-bg-color);
+    border-bottom: 2px solid var(--theme-bg-color);
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    height: calc(100% + 5px);
+    top: 9px;
+    left: -27px;
+}
+
+.example-list {
+    background-color: var(--theme-bg-color);
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 8px;
+    display: inline-block;
+    margin-right: 4px;
+    margin-top: 0px;
+    margin-bottom: 6px;
+}
+
+.example-list:hover {
+    background-color: rgb(230 136 162);
 }
 
 .dic-foot {
